@@ -21,6 +21,7 @@ public class BacSi {
     private String Diachi;
     private String Chuyennganh;
     private String tuoi;
+    private String Ghichu;
 
     /**
      * @return the MaBS
@@ -132,6 +133,17 @@ public class BacSi {
      */
     public void setTuoi(String tuoi) {
         this.tuoi = tuoi;
+    }
+
+    public String getGhiChu() {
+        return Ghichu;
+    }
+
+    /**
+     * @param tuoi the tuoi to set
+     */
+    public void setGhiChu(String Ghichu) {
+        this.Ghichu = Ghichu;
     }
 
 }

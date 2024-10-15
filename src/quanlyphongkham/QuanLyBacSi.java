@@ -9,8 +9,11 @@ import Entity.BacSi;
 import DAO.BacSiDAO;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -62,6 +65,8 @@ public class QuanLyBacSi extends javax.swing.JDialog {
         txtNgaySinh = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         txtChuyenNganh = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        txtDiaChi = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblBang = new javax.swing.JTable();
         btnExit = new javax.swing.JButton();
@@ -130,13 +135,13 @@ public class QuanLyBacSi extends javax.swing.JDialog {
         txtSDT.setBounds(680, 130, 190, 30);
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel7.setText("Địa Chỉ");
+        jLabel7.setText("Ghi chú");
         jPanel2.add(jLabel7);
-        jLabel7.setBounds(20, 180, 57, 22);
+        jLabel7.setBounds(20, 220, 70, 22);
 
         txtGhiChu.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jPanel2.add(txtGhiChu);
-        txtGhiChu.setBounds(113, 172, 760, 90);
+        txtGhiChu.setBounds(140, 220, 410, 50);
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel8.setText("Tuổi");
@@ -166,22 +171,35 @@ public class QuanLyBacSi extends javax.swing.JDialog {
         jPanel2.add(txtChuyenNganh);
         txtChuyenNganh.setBounds(750, 80, 120, 30);
 
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel10.setText("Địa Chỉ");
+        jPanel2.add(jLabel10);
+        jLabel10.setBounds(20, 170, 57, 22);
+
+        txtDiaChi.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        jPanel2.add(txtDiaChi);
+        txtDiaChi.setBounds(140, 170, 410, 40);
+
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 908, 280));
 
         tblBang.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         tblBang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Mã Bác Sĩ", "Họ Và Tên", "Chuyên Ngành", "Địa Chỉ"
+                "Mã Bác Sĩ", "Họ Và Tên", "Chuyên Ngành", "Ngày sinh", "Ghi chú", "Địa Chỉ", "SĐT", "Giới tính"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -254,9 +272,9 @@ public class QuanLyBacSi extends javax.swing.JDialog {
     private void btnAddMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddMouseClicked
         // TODO add your handling code here:
         if (!Auth.isManager()) {
-                MsgBox.alert(this, "Bạn không có quyền thực hiện các tác vụ này!");
-                return;
-            }
+            MsgBox.alert(this, "Bạn không có quyền thực hiện các tác vụ này!");
+            return;
+        }
         if (checkform()) {
             if (checkInsert()) {
                 this.insert();
@@ -267,18 +285,19 @@ public class QuanLyBacSi extends javax.swing.JDialog {
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
         if (!Auth.isManager()) {
-                MsgBox.alert(this, "Bạn không có quyền thực hiện các tác vụ này!");
-                return;
-            }
+            MsgBox.alert(this, "Bạn không có quyền thực hiện các tác vụ này!");
+            return;
+        }
+       
         if (checkform()) {
-            MsgBox.confirm(this,"Vui lòng không thay đổi mã bác sĩ khi cập nhật");
+//            MsgBox.confirm(this, "Vui lòng không thay đổi mã bác sĩ khi cập nhật");
             this.update();
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void tblBangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBangMouseClicked
         // TODO add your handling code here:
-        if (evt.getClickCount() == 2) {
+        if (evt.getClickCount() == 1) {
             this.row = tblBang.getSelectedRow();
             this.edit();
         }
@@ -287,15 +306,19 @@ public class QuanLyBacSi extends javax.swing.JDialog {
     private void btnDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelActionPerformed
         // TODO add your handling code here:
         if (!Auth.isManager()) {
-                MsgBox.alert(this, "Bạn không có quyền thực hiện các tác vụ này!");
-                return;
-            }
+            MsgBox.alert(this, "Bạn không có quyền thực hiện các tác vụ này!");
+            return;
+        }
         this.delete();
     }//GEN-LAST:event_btnDelActionPerformed
 
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
         // TODO add your handling code here:
         this.clearForm();
+        // Check if txtMaBS is disabled, and enable it if necessary
+        if (!txtMaBS.isEnabled()) {
+            txtMaBS.setEnabled(true);
+        }
     }//GEN-LAST:event_btnNewActionPerformed
 
     private void txtNgaySinhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgaySinhActionPerformed
@@ -353,6 +376,7 @@ public class QuanLyBacSi extends javax.swing.JDialog {
     private javax.swing.JButton btnUpdate;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -368,6 +392,7 @@ public class QuanLyBacSi extends javax.swing.JDialog {
     private javax.swing.JRadioButton rdoNu;
     private javax.swing.JTable tblBang;
     private javax.swing.JTextField txtChuyenNganh;
+    private javax.swing.JTextField txtDiaChi;
     private javax.swing.JTextField txtGhiChu;
     private javax.swing.JTextField txtMaBS;
     private javax.swing.JTextField txtNgaySinh;
@@ -383,16 +408,31 @@ public class QuanLyBacSi extends javax.swing.JDialog {
         model.setRowCount(0);
         try {
             List<BacSi> list = dao.selectALL();
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd"); // Assuming this is the format in your database
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy"); // Desired output format
+
             for (BacSi bs : list) {
+                // Parse the date string from the database
+                String dateString = bs.getNgaysinh(); // e.g., "YYYY-MM-DD"
+                String formattedDate = dateString; // Default to the original value
+
+                try {
+                    Date date = inputFormat.parse(dateString); // Parse the original date string
+                    formattedDate = outputFormat.format(date); // Format it to DD/MM/YYYY
+                } catch (ParseException e) {
+                    System.out.println("Date parsing error: " + e.getMessage());
+                    // Optionally, handle the error or set formattedDate to an error message
+                }
+
                 Object[] row = {
                     bs.getMaBS(),
                     bs.getTenBS(),
                     bs.getChuyennganh(),
+                    formattedDate, // Use the formatted date here
+                    bs.getGhiChu(),
                     bs.getDiachi(),
-                    bs.getGioitinh(),
                     bs.getSDT(),
-                    bs.getNgaysinh()
-                };
+                    bs.getGioitinh(),};
                 model.addRow(row);
             }
         } catch (Exception e) {
@@ -412,7 +452,8 @@ public class QuanLyBacSi extends javax.swing.JDialog {
         if (rdoNu.isSelected()) {
             nv.setGioitinh(rdoNu.getText());
         }
-        nv.setDiachi(txtGhiChu.getText());
+        nv.setDiachi(txtDiaChi.getText());
+        nv.setGhiChu(txtGhiChu.getText());
         nv.setNgaysinh(txtNgaySinh.getText());
         nv.setSDT(txtSDT.getText());
 
@@ -423,14 +464,37 @@ public class QuanLyBacSi extends javax.swing.JDialog {
         txtMaBS.setText(nv.getMaBS());
         txtTenBS.setText(nv.getTenBS());
         txtChuyenNganh.setText(nv.getChuyennganh());
-        txtGhiChu.setText(nv.getDiachi());
+        txtGhiChu.setText(nv.getGhiChu());
+        txtNgaySinh.setText(nv.getNgaysinh());
+        txtSDT.setText(nv.getSDT());
+        txtDiaChi.setText(nv.getDiachi());
+
+        // Set gender
         if (nv.getGioitinh().equalsIgnoreCase("Nam")) {
             rdoNam.setSelected(true);
         } else if (nv.getGioitinh().equalsIgnoreCase("Nữ")) {
             rdoNu.setSelected(true);
         }
+
         txtSDT.setText(nv.getSDT());
-        txtNgaySinh.setText(nv.getNgaysinh());
+
+        // Format the date from ngaysinh (String) to DD/MM/YYYY
+        String ngaysinhStr = nv.getNgaysinh(); // Assuming this returns a date in "yyyy-MM-dd" format
+        if (ngaysinhStr != null) {
+            try {
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+                Date date = inputFormat.parse(ngaysinhStr);
+                String formattedDate = outputFormat.format(date);
+                txtNgaySinh.setText(formattedDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                txtNgaySinh.setText(""); // Handle parsing error
+            }
+        } else {
+            txtNgaySinh.setText(""); // Handle null case
+        }
+
         txtTuoi.setText(String.valueOf(TinhTuoi()));
     }
 
@@ -438,11 +502,25 @@ public class QuanLyBacSi extends javax.swing.JDialog {
         String mabs = (String) tblBang.getValueAt(this.row, 0);
         BacSi nv = dao.selectById(mabs);
         this.setForm(nv);
+        txtMaBS.setEnabled(false); // Disable the txtMaBS field
     }
 
     void insert() {
         BacSi bs = this.getForm();
         try {
+            // Convert the date format from dd/MM/yyyy to yyyy-MM-dd
+            String inputDate = bs.getNgaysinh(); // Assuming ngaySinh is a String in dd/MM/yyyy format
+
+            // Define the date format you expect to receive (dd/MM/yyyy)
+            SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = inputFormat.parse(inputDate);  // Parse the input date
+
+            // Define the date format the database expects (yyyy-MM-dd)
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String formattedDate = outputFormat.format(date);  // Format the date
+
+            // Set the formatted date back into the object
+            bs.setNgaysinh(formattedDate);
             dao.insert(bs);
             this.fillTable(); // đỗ lại bảng
             this.clearForm(); // xóa trắng form
@@ -457,8 +535,23 @@ public class QuanLyBacSi extends javax.swing.JDialog {
     void update() {
         BacSi bs = this.getForm();
         try {
+            String inputDate = bs.getNgaysinh(); // Assuming ngaySinh is a String in dd/MM/yyyy format
+
+            // Define the date format you expect to receive (dd/MM/yyyy)
+            SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = inputFormat.parse(inputDate);  // Parse the input date
+
+            // Define the date format the database expects (yyyy-MM-dd)
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String formattedDate = outputFormat.format(date);  // Format the date
+
+            // Set the formatted date back into the object
+            bs.setNgaysinh(formattedDate);
             dao.update(bs); // cập nhật
             this.fillTable(); // đổ lại bảng
+
+            this.setForm(bs);
+
             MsgBox.alert(this, "Cập nhật thành công!");
 
         } catch (Exception e) {
@@ -503,12 +596,13 @@ public class QuanLyBacSi extends javax.swing.JDialog {
         txtSDT.setText("");
         txtTenBS.setText("");
         txtTuoi.setText("");
+        txtDiaChi.setText("");
         rdoNam.setSelected(true);
     }
 
     boolean checkform() {
         String sdt = "0[0-9]{9}";
-        String regex = "^\\d{4}-\\d{2}-\\d{2}$";
+        String regex = "^\\d{2}/\\d{2}/\\d{4}$";
         if (txtMaBS.getText().equalsIgnoreCase("")) {
             MsgBox.alert(this, "Mã bác sĩ không được trống!");
             return false;
@@ -528,9 +622,9 @@ public class QuanLyBacSi extends javax.swing.JDialog {
             MsgBox.alert(this, "Bạn chưa nhập tên bác sĩ!");
             return false;
         } else if (!txtNgaySinh.getText().matches(regex)) {
-            MsgBox.alert(this, "Bạn nhập sai định dạng ngày sinh,hãy kiểm tra lại(yyy-mm-dd)!");
+            MsgBox.alert(this, "Bạn nhập sai định dạng ngày sinh, hãy kiểm tra lại(DD/MM/YYYY)!");
             return false;
-        }else if (!txtSDT.getText().matches(sdt)) {
+        } else if (!txtSDT.getText().matches(sdt)) {
             MsgBox.alert(this, "Không đúng định dạng số điện thoại");
             return false;
         }
@@ -538,17 +632,34 @@ public class QuanLyBacSi extends javax.swing.JDialog {
     }
 
     int TinhTuoi() {
-        int tuoi = 0;
-        int namHienTai = 0, namNgaySinh = 0;
-        BacSiDAO dao = new BacSiDAO();
-        BacSi list = dao.selectById(txtMaBS.getText());
-        String ngaysinhh = list.getNgaysinh();
-        String par[] = ngaysinhh.split("-");
-        String par1 = par[0];
-        namNgaySinh = Integer.parseInt(par1);
-        namHienTai = Calendar.getInstance().get(Calendar.YEAR);
-        tuoi = namHienTai - namNgaySinh;
-        return tuoi;
+        try {
+            BacSiDAO dao = new BacSiDAO();
+            BacSi list = dao.selectById(txtMaBS.getText());
+            String ngaysinhh = list.getNgaysinh(); // Assuming the format is "YYYY-MM-DD"
+
+            // Parse the birth date
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar birthCal = Calendar.getInstance();
+            birthCal.setTime(sdf.parse(ngaysinhh));
+
+            // Get current date
+            Calendar today = Calendar.getInstance();
+
+            // Calculate age
+            int tuoi = today.get(Calendar.YEAR) - birthCal.get(Calendar.YEAR);
+
+            // Adjust for whether the birthday has occurred this year
+            if (today.get(Calendar.MONTH) < birthCal.get(Calendar.MONTH)
+                    || (today.get(Calendar.MONTH) == birthCal.get(Calendar.MONTH) && today.get(Calendar.DAY_OF_MONTH) < birthCal.get(Calendar.DAY_OF_MONTH))) {
+                tuoi--;
+            }
+
+            return tuoi;
+
+        } catch (ParseException e) {
+            e.printStackTrace(); // Handle the exception as needed
+            return 0; // Or handle as needed
+        }
     }
 
     public List<String> selectID() {

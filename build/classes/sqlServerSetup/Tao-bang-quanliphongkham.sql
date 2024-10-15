@@ -201,3 +201,47 @@ BEGIN
            @DoanhThuCao AS [Doanh thu cao],
            @DoanhThuTrungBinh AS [Doanh thu trung bình];
 END;
+
+
+INSERT INTO BenhNhan (MaBN, Hoten, NgaySinh, GioiTinh, Diachi, Baohiem, sdt)
+VALUES
+('BN001', 'Nguyen Van A', '1990-05-10', 'Nam', 'Ha Noi', 1, '0909123456'),
+('BN002', 'Tran Thi B', '1985-08-20', 'Nu', 'Hai Phong', 0, '0911223344'),
+('BN003', 'Le Thi C', '2000-12-30', 'Nu', 'Da Nang', 1, '0922345678');
+
+INSERT INTO BacSi (MaBS, TenBS, Chuyennganh, NgaySinh, GhiChu, SDT, GioiTinh)
+VALUES
+('BS001', 'Dr. Nguyen Thanh', 'Noi khoa', '1975-03-15', 'Gioi kinh nghiem', '0988111222', 'Nam'),
+('BS002', 'Dr. Tran Minh', 'Ngoai khoa', '1980-11-25', 'Cham soc tot', '0988333444', 'Nam'),
+('BS003', 'Dr. Pham Anh', 'Da lieu', '1982-09-09', 'Tot nghiep hoc vien', '0977222333', 'Nu');
+
+INSERT INTO Thuoc (MaThuoc, Tenthuoc, HDS, DonVi, GiaTien)
+VALUES
+('T001', 'Paracetamol', '2024-12-31', 'Vien', 15000),
+('T002', 'Amoxicillin', '2025-06-15', 'Vien', 25000),
+('T003', 'Aspirin', '2023-09-30', 'Vien', 20000);
+
+INSERT INTO DonThuoc (MaDT, MaBS, Lieudung)
+VALUES
+('DT001', 'BS001', '1 vien/ngay'),
+('DT002', 'BS002', '2 vien/ngay'),
+('DT003', 'BS003', '1 vien/ngay');
+
+INSERT INTO PhieuKham (MaPhieuKham, MaDT, MaBS, MaBN, ThanhTien, NgayKham, MotaBenh)
+VALUES
+('PK001', 'DT001', 'BS001', 'BN001', '50000', '2024-10-01', 'Cảm cúm nhẹ'),
+('PK002', 'DT002', 'BS002', 'BN002', '80000', '2024-10-02', 'Viêm họng'),
+('PK003', 'DT003', 'BS003', 'BN003', '120000', '2024-10-03', 'Dị ứng da');
+
+
+INSERT INTO Chitiet_DonThuoc_Thuoc (MaThuoc, MaDT)
+VALUES
+('T001', 'DT001'),
+('T002', 'DT002'),
+('T003', 'DT003');
+
+INSERT INTO Account (UserName, Password, vaitro)
+VALUES
+('admin', 'admin123', 1),
+('doctor01', 'pass123', 0),
+('nurse01', 'pass456', 0);

@@ -9,8 +9,11 @@ import DAO.BenhNhanDAO;
 import Entity.Benhnhan;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import util.Auth;
@@ -260,7 +263,7 @@ public class QuanLyBenhNhan extends javax.swing.JDialog {
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
         if (checkform()) {
-            MsgBox.confirm(this,"Vui lòng không thay đổi mã bệnh nhân khi cập nhật");
+//            MsgBox.confirm(this, "Vui lòng không thay đổi mã bệnh nhân khi cập nhật");
             this.update();
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
@@ -277,6 +280,9 @@ public class QuanLyBenhNhan extends javax.swing.JDialog {
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
         // TODO add your handling code here:
         this.clearForm();
+        if (!txtMaBN.isEnabled()) {
+            txtMaBN.setEnabled(true);
+        }
     }//GEN-LAST:event_btnNewActionPerformed
 
     private void tblBangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBangMouseClicked
@@ -382,11 +388,23 @@ public class QuanLyBenhNhan extends javax.swing.JDialog {
         model.setRowCount(0);//xóa sạch dữ liệu bên trong form bảng
         try {
             List<Benhnhan> list = dao.selectALL();
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd"); // Assuming this is the format in your database
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy"); // Desired output format
             for (Benhnhan bn : list) {
+                // Parse the date string from the database
+                String dateString = bn.getNgaySinh(); // e.g., "YYYY-MM-DD"
+                String formattedDate = dateString; // Default to the original value
+                try {
+                    Date date = inputFormat.parse(dateString); // Parse the original date string
+                    formattedDate = outputFormat.format(date); // Format it to DD/MM/YYYY
+                } catch (ParseException e) {
+                    System.out.println("Date parsing error: " + e.getMessage());
+                    // Optionally, handle the error or set formattedDate to an error message
+                }
                 Object[] row = {
                     bn.getMaBN(),
                     bn.getTenBN(),
-                    bn.getNgaySinh(),
+                    formattedDate,
                     bn.getGioiTinh(),
                     bn.getDiachi(),
                     bn.isBaoHiem() ? "Có" : "Không",
@@ -419,7 +437,23 @@ public class QuanLyBenhNhan extends javax.swing.JDialog {
     void setForm(Benhnhan bn) {
         txtMaBN.setText(bn.getMaBN());
         txtTenBN.setText(bn.getTenBN());
-        txtNgaySinh.setText(bn.getNgaySinh());
+        // Format the date from ngaysinh (String) to DD/MM/YYYY
+        String ngaysinhStr = bn.getNgaySinh(); // Assuming this returns a date in "yyyy-MM-dd" format
+        if (ngaysinhStr != null) {
+            try {
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+                Date date = inputFormat.parse(ngaysinhStr);
+                String formattedDate = outputFormat.format(date);
+                txtNgaySinh.setText(formattedDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                txtNgaySinh.setText(""); // Handle parsing error
+            }
+        } else {
+            txtNgaySinh.setText(""); // Handle null case
+        }
+
         if (bn.getGioiTinh().equalsIgnoreCase("Nam")) {
             rdoNam.setSelected(true);
         } else if (bn.getGioiTinh().equalsIgnoreCase("Nữ")) {
@@ -450,9 +484,10 @@ public class QuanLyBenhNhan extends javax.swing.JDialog {
         Benhnhan nv = dao.selectById(mabn);
         this.row = -1;
         this.setForm(nv);
+        txtMaBN.setEnabled(false); // Disable the txtMaBS field
         // this.updateStatus();
     }
-    
+
     void insert() {
         Benhnhan bn = getForm();
         try {
@@ -501,7 +536,7 @@ public class QuanLyBenhNhan extends javax.swing.JDialog {
 
     boolean checkform() {
         String sdt = "0[0-9]{9,10}";
-        String regex = "^\\d{4}-\\d{2}-\\d{2}$";
+        String regex = "^\\d{2}/\\d{2}/\\d{4}$";
         if (txtMaBN.getText().length() == 0) {
             MsgBox.alert(this, "Không để trống mã bệnh nhân");
             return false;
@@ -512,7 +547,7 @@ public class QuanLyBenhNhan extends javax.swing.JDialog {
             MsgBox.alert(this, "Không để trống ngày sinh");
             return false;
         } else if (!txtNgaySinh.getText().matches(regex)) {
-            MsgBox.alert(this, "Không đúng định dạng ngày sinh!!! vd 2001-02-26");
+            MsgBox.alert(this, "Bạn nhập sai định dạng ngày sinh, hãy kiểm tra lại(DD/MM/YYYY)!");
             return false;
         } else if (txtDiaChi.getText().length() == 0) {
             MsgBox.alert(this, "Không để trống địa chỉ");
@@ -520,7 +555,7 @@ public class QuanLyBenhNhan extends javax.swing.JDialog {
         } else if (txtSDT.getText().length() == 0) {
             MsgBox.alert(this, "Không để trống SDT");
             return false;
-        }else if (!txtSDT.getText().matches(sdt)) {
+        } else if (!txtSDT.getText().matches(sdt)) {
             MsgBox.alert(this, "Không đúng định dạng số điện thoại!!!");
             return false;
         }
