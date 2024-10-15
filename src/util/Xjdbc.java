@@ -18,9 +18,9 @@ import java.sql.SQLException;
 public class Xjdbc {
 
     static String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    static String dburl = "jdbc:sqlserver://localhost:1433;database=QuanLyPhongKham";
+    static String dburl = "jdbc:sqlserver://localhost:1433;database=QuanLyPhongKham;encrypt=false";
     static String user = "sa";
-    static String pass = "123";
+    static String pass = "12341234";
 
     static {
         try {
@@ -43,7 +43,7 @@ public class Xjdbc {
         }
         return stmt;
     }
-    
+ 
     public static ResultSet query(String sql,Object...args)throws SQLException{
        PreparedStatement stmt =Xjdbc.getStmt(sql, args);
        return stmt.executeQuery();

@@ -897,7 +897,6 @@ public class index extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
     private void init() {
         this.setLocationRelativeTo(null);
-        new ChaoJDialog(this, true).setVisible(true);
         new Login(this, true).setVisible(true);
         //effect.setIcon(new ImageIcon(getClass().getResource("/Background/hover2.gif")));
         new Timer(1000, new ActionListener() {

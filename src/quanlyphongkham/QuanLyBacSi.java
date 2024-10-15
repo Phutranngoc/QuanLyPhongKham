@@ -85,7 +85,7 @@ public class QuanLyBacSi extends javax.swing.JDialog {
         jPanel2.add(jLabel2);
         jLabel2.setBounds(3, 3, 151, 22);
         jPanel2.add(jSeparator1);
-        jSeparator1.setBounds(3, 32, 890, 2);
+        jSeparator1.setBounds(3, 32, 890, 3);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel3.setText("Họ Và Tên BS");
@@ -113,12 +113,12 @@ public class QuanLyBacSi extends javax.swing.JDialog {
         buttonGroup1.add(rdoNam);
         rdoNam.setText("Nam");
         jPanel2.add(rdoNam);
-        rdoNam.setBounds(138, 125, 55, 25);
+        rdoNam.setBounds(138, 125, 49, 21);
 
         buttonGroup1.add(rdoNu);
         rdoNu.setText("Nữ");
         jPanel2.add(rdoNu);
-        rdoNu.setBounds(211, 125, 45, 25);
+        rdoNu.setBounds(211, 125, 39, 21);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel6.setText("SĐT");
@@ -149,6 +149,11 @@ public class QuanLyBacSi extends javax.swing.JDialog {
         txtTuoi.setBounds(685, 43, 50, 30);
 
         txtNgaySinh.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        txtNgaySinh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNgaySinhActionPerformed(evt);
+            }
+        });
         jPanel2.add(txtNgaySinh);
         txtNgaySinh.setBounds(747, 43, 121, 30);
 
@@ -292,6 +297,10 @@ public class QuanLyBacSi extends javax.swing.JDialog {
         // TODO add your handling code here:
         this.clearForm();
     }//GEN-LAST:event_btnNewActionPerformed
+
+    private void txtNgaySinhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgaySinhActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNgaySinhActionPerformed
 
     /**
      * @param args the command line arguments

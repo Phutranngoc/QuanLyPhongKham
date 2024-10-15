@@ -621,7 +621,7 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
         txtTenBN.setText("");
         txtNgaySinh.setText("");
         txtSDT.setText("");
-        rdoNam.setSelected(true);        
+        rdoNam.setSelected(true);
         this.row = -1;
         // this.updateStatus();
     }
@@ -677,22 +677,21 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
             String maphieukham = (String) tblBang.getValueAt(tblBang.getSelectedRow(), 0);
             List<Object[]> list = pkdao.getbenhnhan(maphieukham);
             for (Object[] cd : list) {
-//            System.out.println(cd[1]);
-//      
+
                 txtTenBN.setText((String) cd[0]);
-                txtNgaySinh.setText((String) cd[1]);
+                txtNgaySinh.setText(String.valueOf(cd[1]));
                 if (cd[2].equals("Nam")) {
                     rdoNam.setSelected(true);
                 } else {
                     rdoNu.setSelected(true);
                 }
-                txtSDT.setText((String) cd[3]);
-                txtMaBN.setText((String) cd[4]);
-                txtMaPhieuKham.setText((String) cd[5]);
-                txtMaDonThuoc.setText((String) cd[6]);
-                txtMaBS.setText((String) cd[7]);
-                txtMoTaBenh.setText((String) cd[8]);
-                txtNgayKham.setText((String) cd[9]);
+                txtSDT.setText((String.valueOf(cd[3])));
+                txtMaBN.setText((String.valueOf(cd[4])));
+                txtMaPhieuKham.setText((String.valueOf(cd[5])));
+                txtMaDonThuoc.setText((String.valueOf(cd[6])));
+                txtMaBS.setText((String.valueOf(cd[7])));
+                txtMoTaBenh.setText((String.valueOf(cd[8])));
+                txtNgayKham.setText((String.valueOf(cd[9])));
                 txtTongTien.setText((String.valueOf(cd[10])));
 
             }
@@ -707,29 +706,19 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
         if (txtMaPhieuKham.getText().length() == 0) {
             MsgBox.alert(this, "không để trống mã phiếu khám");
             return false;
-        }
-
-        else if (txtMaBN.getText().length() == 0) {
+        } else if (txtMaBN.getText().length() == 0) {
             MsgBox.alert(this, "không để trống mã bệnh nhân");
             return false;
-        }
-
-        else if (txtMaBS.getText().length() == 0) {
+        } else if (txtMaBS.getText().length() == 0) {
             MsgBox.alert(this, "không để trống mã bác sĩ");
             return false;
-        }
-
-        else if (txtMaDonThuoc.getText().length() == 0) {
+        } else if (txtMaDonThuoc.getText().length() == 0) {
             MsgBox.alert(this, "không để trống mã đơn thuốc");
             return false;
-        }
-
-        else if (!txtNgayKham.getText().matches(regex)) {
+        } else if (!txtNgayKham.getText().matches(regex)) {
             MsgBox.alert(this, "không đúng định dạng ngày khám!!! vd 2001-02-26");
             return false;
-        }
-
-        else if (txtMoTaBenh.getText().length() == 0) {
+        } else if (txtMoTaBenh.getText().length() == 0) {
             MsgBox.alert(this, "không để trống mô tả bệnh");
             return false;
         }

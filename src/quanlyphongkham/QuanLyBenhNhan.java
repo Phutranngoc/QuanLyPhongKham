@@ -281,7 +281,7 @@ public class QuanLyBenhNhan extends javax.swing.JDialog {
 
     private void tblBangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBangMouseClicked
         // TODO add your handling code here:
-        if (evt.getClickCount() == 2) {
+        if (evt.getClickCount() == 1) {
             this.row = tblBang.getSelectedRow();
             this.edit();
         }

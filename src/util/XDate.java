@@ -2,6 +2,8 @@ package util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class XDate {
@@ -25,6 +27,14 @@ public class XDate {
     public static Date addDays(Date date, long days) {
         date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
         return date;
+    }
+    
+        public static String convertDate(String inputDate) {
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd MM yyyy");
+        
+        LocalDate date = LocalDate.parse(inputDate, inputFormatter);
+        return date.format(outputFormatter);
     }
 
     
