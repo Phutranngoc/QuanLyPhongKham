@@ -85,6 +85,11 @@ public class BacSiDAO extends PlusDAO<BacSi, String> {
     public List<BacSi> selectALL() {
         return this.selectBySql(SELECT_ALL_SQL);
     }
+    
+    public List<BacSi> searchByCodeOrName(String keyword) {
+    String sql = "SELECT * FROM BacSi WHERE MaBS LIKE ? OR TenBS LIKE ?";
+    return selectBySql(sql, "%" + keyword + "%", "%" + keyword + "%");
+}
 
     @Override
     protected List<BacSi> selectBySql(String sql, Object... args) {

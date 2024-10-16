@@ -498,7 +498,12 @@ public class index extends javax.swing.JFrame {
     private void lblTextBacSiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTextBacSiMouseClicked
         // TODO add your handling code here:
         if (Auth.isLogin()) {
-            new QuanLyBacSi(this, true).setVisible(true);
+            // Nếu đã đăng nhập, tạo mới một BacSiPage và hiển thị nó
+            BacSiPage bacSiPage = new BacSiPage(); // hoặc truyền tham số nếu cần
+            bacSiPage.setVisible(true);
+
+            // Nếu cần, có thể đóng frame hiện tại
+            this.dispose(); // Đóng frame hiện tại nếu không muốn để lại nó trên màn hình
         } else {
             MsgBox.alert(this, "Vui lòng đăng nhập!");
         }
@@ -574,7 +579,14 @@ public class index extends javax.swing.JFrame {
 
     private void lblBacSiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBacSiMouseClicked
         // TODO add your handling code here:
-        new QuanLyBacSi(this, true).setVisible(true);
+         if (Auth.isLogin()) {
+            // Nếu đã đăng nhập, tạo mới một BacSiPage và hiển thị nó
+            BacSiPage bacSiPage = new BacSiPage(); // hoặc truyền tham số nếu cần
+            bacSiPage.setVisible(true);
+
+            // Nếu cần, có thể đóng frame hiện tại
+            this.dispose(); // Đóng frame hiện tại nếu không muốn để lại nó trên màn hình
+        }
     }//GEN-LAST:event_lblBacSiMouseClicked
 
     private void lblBacSiMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBacSiMouseEntered
