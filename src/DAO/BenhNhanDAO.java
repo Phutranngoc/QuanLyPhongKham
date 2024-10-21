@@ -5,6 +5,7 @@
  */
 package DAO;
 
+import Entity.BacSi;
 import Entity.Benhnhan;
 import util.Xjdbc;
 import java.sql.ResultSet;
@@ -55,7 +56,6 @@ public class BenhNhanDAO extends PlusDAO<Benhnhan, String> {
         Xjdbc.update(Delete_Sql, id);
     }
 
-
     @Override
     public Benhnhan selectById(String id) {
         List<Benhnhan> list = this.selectBySql(Select_By_Id_Sql, id);
@@ -92,4 +92,10 @@ public class BenhNhanDAO extends PlusDAO<Benhnhan, String> {
     public List<Benhnhan> selectALL() {
         return this.selectBySql(Select_All_Sql);
     }
+
+    public List<Benhnhan> searchByCodeOrName(String keyword) {
+        String sql = "SELECT * FROM BenhNhan WHERE MaBN LIKE ? OR HoTen LIKE ?";
+        return selectBySql(sql, "%" + keyword + "%", "%" + keyword + "%");
+    }
+
 }

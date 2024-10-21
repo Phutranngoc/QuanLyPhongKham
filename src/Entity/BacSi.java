@@ -146,4 +146,9 @@ public class BacSi {
         this.Ghichu = Ghichu;
     }
 
+    public interface BacSiModalCallback {
+
+        void onBacSiAdded(); // Phương thức sẽ được gọi khi bệnh nhân được thêm thành công
+    }
+
 }

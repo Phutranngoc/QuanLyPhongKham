@@ -7,6 +7,8 @@ package quanlyphongkham;
 
 import Entity.BacSi;
 import DAO.BacSiDAO;
+import Entity.BacSi.BacSiModalCallback;
+import Entity.Benhnhan;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -28,15 +30,17 @@ import util.Xjdbc;
 public class BacSiModal extends javax.swing.JDialog {
 
     private Boolean isUpdate; //Check xem đang cập nhật hay tạo mới
+    private BacSiModalCallback callback; // Trường callback
 
     /**
      * Creates new form Doctor
      */
-    public BacSiModal(java.awt.Frame parent, boolean isVisible, Boolean isUpdate) {
+    public BacSiModal(java.awt.Frame parent, boolean isVisible, Boolean isUpdate, BacSiModalCallback callback) {
 
         super(parent, isVisible);
         initComponents();
         this.isUpdate = isUpdate; // Lưu trạng thái
+        this.callback = callback; // Gán callback
         init();
     }
 
@@ -119,12 +123,12 @@ public class BacSiModal extends javax.swing.JDialog {
         buttonGroup1.add(rdoNam);
         rdoNam.setText("Nam");
         jPanel2.add(rdoNam);
-        rdoNam.setBounds(140, 240, 50, 21);
+        rdoNam.setBounds(140, 240, 49, 21);
 
         buttonGroup1.add(rdoNu);
         rdoNu.setText("Nữ");
         jPanel2.add(rdoNu);
-        rdoNu.setBounds(200, 240, 40, 21);
+        rdoNu.setBounds(200, 240, 39, 21);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel6.setText("Số điện thoại");
@@ -220,7 +224,7 @@ public class BacSiModal extends javax.swing.JDialog {
 
         jLabel11.setText("tuổi");
         jPanel2.add(jLabel11);
-        jLabel11.setBounds(340, 130, 20, 16);
+        jLabel11.setBounds(340, 130, 21, 16);
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 580, 470));
 
@@ -318,7 +322,12 @@ public class BacSiModal extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                BacSiModal dialog = new BacSiModal(new javax.swing.JFrame(), true, false);
+                BacSiModal dialog = new BacSiModal(new javax.swing.JFrame(), true, false, new BacSiModalCallback() {
+                    @Override
+                    public void onBacSiAdded() {
+
+                    }
+                });
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -443,6 +452,9 @@ public class BacSiModal extends javax.swing.JDialog {
 
             this.clearForm(); // xóa trắng form
             MsgBox.alert(this, "Thêm mới thành công!");
+            if (callback != null) {
+                callback.onBacSiAdded();// Gọi callback sau khi cập nhật thành công
+            }
 
         } catch (Exception e) {
             MsgBox.alert(this, "Cập nhật thất bại!");
@@ -470,6 +482,9 @@ public class BacSiModal extends javax.swing.JDialog {
             this.setForm(bs);
 
             MsgBox.alert(this, "Cập nhật thành công!");
+            if (callback != null) {
+                callback.onBacSiAdded();// Gọi callback sau khi cập nhật thành công
+            }
 
         } catch (Exception e) {
             System.out.println(e);
@@ -478,7 +493,6 @@ public class BacSiModal extends javax.swing.JDialog {
     }
 
     void init() {
-
         setLocationRelativeTo(null); // đưa cửa sổ ra giữa màn hình
 
     }

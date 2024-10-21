@@ -445,7 +445,9 @@ public class index extends javax.swing.JFrame {
     private void lblBenhNhanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBenhNhanMouseClicked
         // TODO add your handling code here:
         if (Auth.isLogin()) {
-            new QuanLyBenhNhan(this, true).setVisible(true);
+              // Nếu đã đăng nhập, tạo mới một BacSiPage và hiển thị nó
+            BenhNhanPage benhNhanPage = new BenhNhanPage(); // hoặc truyền tham số nếu cần
+            benhNhanPage.setVisible(true);
         } else {
             MsgBox.alert(this, "Vui lòng đăng nhập!");
         }
@@ -513,7 +515,9 @@ public class index extends javax.swing.JFrame {
     private void lblBenhNhanTextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBenhNhanTextMouseClicked
         // TODO add your handling code here:
         if (Auth.isLogin()) {
-            new QuanLyBenhNhan(this, true).setVisible(true);
+             // Nếu đã đăng nhập, tạo mới một BacSiPage và hiển thị nó
+            BenhNhanPage benhNhanPage = new BenhNhanPage(); // hoặc truyền tham số nếu cần
+            benhNhanPage.setVisible(true);
         } else {
             MsgBox.alert(this, "Vui lòng đăng nhập!");
         }
@@ -585,7 +589,7 @@ public class index extends javax.swing.JFrame {
             bacSiPage.setVisible(true);
 
             // Nếu cần, có thể đóng frame hiện tại
-            this.dispose(); // Đóng frame hiện tại nếu không muốn để lại nó trên màn hình
+//            this.dispose(); // Đóng frame hiện tại nếu không muốn để lại nó trên màn hình
         }
     }//GEN-LAST:event_lblBacSiMouseClicked
 

@@ -7,6 +7,7 @@ package quanlyphongkham;
 
 import Entity.BacSi;
 import DAO.BacSiDAO;
+import Entity.BacSi.BacSiModalCallback;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -48,16 +49,14 @@ public class BacSiPage extends javax.swing.JFrame {
         buttonGroup1 = new javax.swing.ButtonGroup();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblBang = new javax.swing.JTable();
-        btnExit = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setIconImage(null);
         setResizable(false);
         setSize(new java.awt.Dimension(738, 932));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -97,14 +96,6 @@ public class BacSiPage extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 970, 440));
 
-        btnExit.setText("Thoát");
-        btnExit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExitActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 110, 30));
-
         btnAdd.setText("Thêm Mới");
         btnAdd.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -117,7 +108,6 @@ public class BacSiPage extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 120, 110, 30));
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 10, 310, -1));
 
         jLabel2.setFont(new java.awt.Font("sansserif", 1, 24)); // NOI18N
         jLabel2.setText("Quản lý bác sĩ");
@@ -143,13 +133,12 @@ public class BacSiPage extends javax.swing.JFrame {
         });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 120, 100, 30));
 
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Background/vector-MAY-2020-112.jpg"))); // NOI18N
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1020, 740));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
-    }//GEN-LAST:event_btnExitActionPerformed
 
     private void tblBangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBangMouseClicked
         // TODO add your handling code here:
@@ -164,7 +153,7 @@ public class BacSiPage extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddMouseClicked
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-       
+
 
     }//GEN-LAST:event_jTextField1ActionPerformed
 
@@ -173,7 +162,7 @@ public class BacSiPage extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       // Lấy giá trị tìm kiếm từ jTextField1
+        // Lấy giá trị tìm kiếm từ jTextField1
         String keyword = jTextField1.getText().trim();
 
         // Kiểm tra nếu keyword không rỗng
@@ -223,12 +212,11 @@ public class BacSiPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
-    private javax.swing.JButton btnExit;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tblBang;
@@ -281,7 +269,12 @@ public class BacSiPage extends javax.swing.JFrame {
 
     void create() {
         // Tạo một modal BacSiForm và hiển thị nó
-        BacSiModal modal = new BacSiModal(this, true, false);
+        BacSiModal modal = new BacSiModal(this, true, false, new BacSiModalCallback() {
+            @Override
+            public void onBacSiAdded() {
+                init(); // Gọi phương thức init() để cập nhật danh sách bác sĩ
+            }
+        });
         modal.setVisible(true);
 
     }
@@ -291,7 +284,12 @@ public class BacSiPage extends javax.swing.JFrame {
         BacSi bs = dao.selectById(mabs);
 
         // Tạo một modal BacSiForm và hiển thị nó
-        BacSiModal modal = new BacSiModal(this, true, true);
+        BacSiModal modal = new BacSiModal(this, true, true, new BacSiModalCallback() {
+            @Override
+            public void onBacSiAdded() {
+                init(); // Gọi phương thức init() để cập nhật danh sách bác sĩ
+            }
+        });
         modal.setForm(bs);  // Fill dữ liệu vào modal
         modal.setVisible(true);
     }

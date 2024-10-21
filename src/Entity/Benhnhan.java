@@ -12,6 +12,7 @@ import java.util.Date;
  * @author HA NAM
  */
 public class Benhnhan {
+
     private String maBN;
     private String tenBN;
     private String ngaySinh;
@@ -118,5 +119,9 @@ public class Benhnhan {
         this.baoHiem = baoHiem;
     }
 
-   
+    public interface BenhNhanModalCallback {
+
+        void onBenhNhanAdded(); // Phương thức sẽ được gọi khi bệnh nhân được thêm thành công
+    }
+
 }
