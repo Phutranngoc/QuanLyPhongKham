@@ -477,7 +477,9 @@ public class index extends javax.swing.JFrame {
     private void lblDonThocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblDonThocMouseClicked
         // TODO add your handling code here:
         if (Auth.isLogin()) {
-            new QuanLyDonThuoc(this, true).setVisible(true);
+//             new QuanLyDonThuoc(this, true).setVisible(true);
+            DonThuocPage donThuocPage = new DonThuocPage(); // hoặc truyền tham số nếu cần
+            donThuocPage.setVisible(true);
         } else {
             MsgBox.alert(this, "Vui lòng đăng nhập!");
         }
@@ -505,7 +507,7 @@ public class index extends javax.swing.JFrame {
             bacSiPage.setVisible(true);
 
             // Nếu cần, có thể đóng frame hiện tại
-            this.dispose(); // Đóng frame hiện tại nếu không muốn để lại nó trên màn hình
+//            this.dispose(); // Đóng frame hiện tại nếu không muốn để lại nó trên màn hình
         } else {
             MsgBox.alert(this, "Vui lòng đăng nhập!");
         }
@@ -547,7 +549,9 @@ public class index extends javax.swing.JFrame {
     private void lblDonThuocTextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblDonThuocTextMouseClicked
         // TODO add your handling code here:
         if (Auth.isLogin()) {
-            new QuanLyDonThuoc(this, true).setVisible(true);
+//            new QuanLyDonThuoc(this, true).setVisible(true);//
+             DonThuocPage donThuocPage = new DonThuocPage(); // hoặc truyền tham số nếu cần
+            donThuocPage.setVisible(true);
         } else {
             MsgBox.alert(this, "Vui lòng đăng nhập!");
         }

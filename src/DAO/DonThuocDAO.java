@@ -53,6 +53,11 @@ public class DonThuocDAO extends PlusDAO<DonThuoc, String> {
     public List<DonThuoc> selectALL() {
         return this.selectBySql(SELECT_ALL_SQL);
     }
+    
+      public List<DonThuoc> searchByCodeOrName(String keyword) {
+    String sql = "SELECT * FROM DonThuoc WHERE MaDT LIKE ? OR MaBS LIKE ?";
+    return selectBySql(sql, "%" + keyword + "%", "%" + keyword + "%");
+}
 
     @Override
     protected List<DonThuoc> selectBySql(String sql, Object... args) {

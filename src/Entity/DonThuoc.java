@@ -37,4 +37,8 @@ public class DonThuoc {
     public void setLieudung(String Lieudung) {
         this.Lieudung = Lieudung;
     }   
+    public interface DonThuocModalCallback {
+
+        void onDonThuocAdded(); // Phương thức sẽ được gọi khi bệnh nhân được thêm thành công
+    }
 }

@@ -114,7 +114,7 @@ public class BenhNhanPage extends javax.swing.JFrame {
         });
         getContentPane().add(btnAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 120, 110, 30));
 
-        jTextField1.setToolTipText("Tìm kiếm theo mã, tên bác sĩ");
+        jTextField1.setToolTipText("Tìm kiếm theo mã, tên bệnh nhân");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
