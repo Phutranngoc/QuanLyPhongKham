@@ -8,6 +8,8 @@ package quanlyphongkham;
 import Entity.BacSi;
 import DAO.BacSiDAO;
 import Entity.BacSi.BacSiModalCallback;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -64,21 +66,21 @@ public class BacSiPage extends javax.swing.JFrame {
         tblBang.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         tblBang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Mã Bác Sĩ", "Họ Và Tên", "Chuyên Ngành", "Ngày sinh", "Ghi chú", "Địa Chỉ", "SĐT", "Giới tính"
+                "Mã Bác Sĩ", "Họ Và Tên", "Chuyên Ngành", "Ngày sinh", "Ghi chú", "Địa Chỉ", "SĐT", "Giới tính", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -144,7 +146,13 @@ public class BacSiPage extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (evt.getClickCount() == 1) {
             this.row = tblBang.getSelectedRow();
-            this.edit();
+             int column = tblBang.columnAtPoint(evt.getPoint()); // Lấy cột được nhấn
+
+            // Kiểm tra nếu cột không phải là cột "Xóa"
+            if (column != 8) { // Giả sử cột "Thao Tác" là cột thứ 9 (index 8)
+                this.row = row; // Cập nhật hàng được chọn
+                this.edit(); // Gọi hàm edit chỉ khi không nhấn vào cột "Xóa"
+            }
         }
     }//GEN-LAST:event_tblBangMouseClicked
 
@@ -253,12 +261,44 @@ public class BacSiPage extends javax.swing.JFrame {
                     bs.getGhiChu(),
                     bs.getDiachi(),
                     bs.getSDT(),
-                    bs.getGioitinh(),};
+                    bs.getGioitinh(),
+                    "Xóa"
+                };
                 model.addRow(row); // Thêm hàng vào bảng
             }
+             // Thêm MouseListener để xử lý sự kiện nhấn chuột
+            tblBang.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    int row = tblBang.rowAtPoint(e.getPoint());
+                    int column = tblBang.columnAtPoint(e.getPoint());
+                    if (column == 8) { // Nếu cột được nhấp là cột "Xóa"
+                        String maBS = (String) tblBang.getValueAt(row, 0); // Lấy mã bệnh nhân
+                        delete(maBS); // Gọi hàm xóa
+                    }
+                }
+            });
         } catch (Exception e) {
             System.out.println(e);
             MsgBox.alert(this, "Lỗi truy vấn dữ liệu!");
+        }
+    }
+    
+     private void delete(String maBs) {
+        if (!Auth.isManager()) {
+            MsgBox.alert(this, "Bạn không có quyền xóa");
+        } else {
+            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có thật sự muốn xóa bác sĩ này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    dao.delete(maBs); // Xóa bệnh nhân từ cơ sở dữ liệu bằng mã bệnh nhân
+                    this.loadAllBacSi();
+                    MsgBox.alert(this, "Xóa bác sĩ thành công!");
+                } catch (Exception e) {
+                    MsgBox.alert(this, "Xóa bác sĩ thất bại. Vui lòng kiểm tra lại.");
+                    MsgBox.alert(this, "Hãy xóa đơn thuốc của bác sĩ này trước!");
+                }
+            }
         }
     }
 

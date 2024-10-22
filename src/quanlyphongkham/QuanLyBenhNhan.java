@@ -88,7 +88,7 @@ public class QuanLyBenhNhan extends javax.swing.JDialog {
         jPanel2.add(jLabel2);
         jLabel2.setBounds(3, 3, 180, 22);
         jPanel2.add(jSeparator1);
-        jSeparator1.setBounds(3, 32, 890, 2);
+        jSeparator1.setBounds(3, 32, 890, 3);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel3.setText("Họ Và Tên BN");
@@ -116,12 +116,12 @@ public class QuanLyBenhNhan extends javax.swing.JDialog {
         buttonGroupGioiTinh.add(rdoNam);
         rdoNam.setText("Nam");
         jPanel2.add(rdoNam);
-        rdoNam.setBounds(138, 125, 55, 25);
+        rdoNam.setBounds(138, 125, 49, 21);
 
         buttonGroupGioiTinh.add(rdoNu);
         rdoNu.setText("Nữ");
         jPanel2.add(rdoNu);
-        rdoNu.setBounds(211, 125, 45, 25);
+        rdoNu.setBounds(211, 125, 39, 21);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel6.setText("Địa Chỉ");
@@ -163,12 +163,12 @@ public class QuanLyBenhNhan extends javax.swing.JDialog {
         buttonGroupBaoHiem.add(rdoYes);
         rdoYes.setText("Có");
         jPanel2.add(rdoYes);
-        rdoYes.setBounds(120, 230, 43, 25);
+        rdoYes.setBounds(120, 230, 38, 21);
 
         buttonGroupBaoHiem.add(rdoNo);
         rdoNo.setText("Không");
         jPanel2.add(rdoNo);
-        rdoNo.setBounds(200, 230, 63, 25);
+        rdoNo.setBounds(200, 230, 58, 21);
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 908, 280));
 
