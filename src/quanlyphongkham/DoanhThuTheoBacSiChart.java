@@ -11,19 +11,45 @@ import javax.swing.ImageIcon;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.util.Rotation;
 
-public class TiLeSoHuuBaoHiemChart extends javax.swing.JPanel {
+public class DoanhThuTheoBacSiChart extends javax.swing.JPanel {
 
-    private String title = "Tỉ Lệ Bệnh Nhân Sở Hữu Bảo Hiểm Y Tế";
+    private String title = "Doanh Thu (Năm) Theo Bác Sĩ";
     DefaultPieDataset dataset;
     JFreeChart chart;
     ChartPanel chartPanel;
+    public int nam = 2024;
 
-    public TiLeSoHuuBaoHiemChart() {
+    public void setNam(int nam) {
+        this.nam = nam;
+        System.out.println(nam);
+        updateChart();
+    }
+
+    private void updateChart() {
+        // Tạo dataset mới
+        dataset = createDataset();
+
+        // Tạo biểu đồ mới
+        chart = createChart(dataset, title);
+
+        // Xóa biểu đồ cũ
+        jPanel1.removeAll();
+
+        // Thêm biểu đồ mới vào jPanel1
+        chartPanel = new ChartPanel(chart);
+        jPanel1.add(chartPanel);
+
+        // Cập nhật lại layout và vẽ lại panel
+        jPanel1.revalidate();
+        jPanel1.repaint();
+    }
+
+    public DoanhThuTheoBacSiChart() {
         initComponents();
         createChart();
     }
@@ -40,14 +66,18 @@ public class TiLeSoHuuBaoHiemChart extends javax.swing.JPanel {
 
         try {
             Connection connection = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;database=QuanLyPhongKham;encrypt=false;user=sa;password=12341234;");
-            CallableStatement stmt = connection.prepareCall("{call GetTiLeBaoHiem}");
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                int coBaoHiem = rs.getInt("CoBaoHiem");
-                int khongCoBaoHiem = rs.getInt("KhongCoBaoHiem");
 
-                result.setValue("Có Bảo Hiểm", coBaoHiem);
-                result.setValue("Không Có Bảo Hiểm", khongCoBaoHiem);
+            // Gọi stored procedure với năm được chỉ định
+            CallableStatement stmt = connection.prepareCall("{call ThongKeDoanhThuTheoBS(?)}");
+            stmt.setInt(1, nam); // Sử dụng biến nam
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String tenBS = rs.getString("TenBS");
+                double doanhThu = rs.getDouble("DoanhThu");
+
+                result.setValue(tenBS, doanhThu);
             }
 
             rs.close();
@@ -62,12 +92,12 @@ public class TiLeSoHuuBaoHiemChart extends javax.swing.JPanel {
     }
 
     private JFreeChart createChart(PieDataset dataset, String title) {
-        JFreeChart chart = ChartFactory.createPieChart3D(title, dataset, true, false, false);
-        PiePlot3D plot = (PiePlot3D) chart.getPlot();
+        JFreeChart chart = ChartFactory.createPieChart(title, dataset, true, false, false);
+        PiePlot plot = (PiePlot) chart.getPlot();
         plot.setStartAngle(290);
         plot.setDirection(Rotation.CLOCKWISE);
         plot.setForegroundAlpha(0.5f);
-        plot.setLabelGenerator(new org.jfree.chart.labels.StandardPieSectionLabelGenerator("{2}")); //set label display (0:name 1:value 2:percent)
+        plot.setLabelGenerator(new org.jfree.chart.labels.StandardPieSectionLabelGenerator("{0} - {2}")); //set label display (0:name 1:value 2:percent)
         return chart;
     }
 
@@ -106,6 +136,7 @@ public class TiLeSoHuuBaoHiemChart extends javax.swing.JPanel {
     public void setBackgroundColor(Color color) {
         chart.setBackgroundPaint(color);
     }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
