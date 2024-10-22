@@ -41,6 +41,7 @@ public class ThongKe extends javax.swing.JDialog {
         cboNam = new javax.swing.JComboBox<>();
         jScrollPane4 = new javax.swing.JScrollPane();
         tblDoanhThu = new javax.swing.JTable();
+        tiLeSoHuuBaoHiemChart1 = new quanlyphongkham.TiLeSoHuuBaoHiemChart();
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -108,13 +109,16 @@ public class ThongKe extends javax.swing.JDialog {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cboNam, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(tiLeSoHuuBaoHiemChart1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboNam, 0, 820, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING))
                 .addContainerGap())
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 870, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -124,7 +128,10 @@ public class ThongKe extends javax.swing.JDialog {
                     .addComponent(jLabel3)
                     .addComponent(cboNam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(tiLeSoHuuBaoHiemChart1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(520, Short.MAX_VALUE))
         );
 
         tabsThongKe.addTab("Doanh thu", jPanel2);
@@ -153,7 +160,7 @@ public class ThongKe extends javax.swing.JDialog {
 
     private void cboNamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboNamActionPerformed
 //        fillComboBoxNam();
-fillTableDoanhThu();
+        fillTableDoanhThu();
     }//GEN-LAST:event_cboNamActionPerformed
 
     /**
@@ -211,31 +218,32 @@ fillTableDoanhThu();
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane tabsThongKe;
     private javax.swing.JTable tblDoanhThu;
+    private quanlyphongkham.TiLeSoHuuBaoHiemChart tiLeSoHuuBaoHiemChart1;
     // End of variables declaration//GEN-END:variables
     PhieuKhamDAO pkdao = new PhieuKhamDAO();
     ThongKeDAO dao = new ThongKeDAO();
 
     void init() {
-        setLocationRelativeTo(null);      
+        setLocationRelativeTo(null);
         fillComboBoxNam();
         fillTableDoanhThu();
     }
-           
-    void fillComboBoxNam(){
+
+    void fillComboBoxNam() {
         DefaultComboBoxModel model = (DefaultComboBoxModel) cboNam.getModel();
         model.removeAllElements();
         List<Integer> list = pkdao.selectYears();
-        for(Integer year : list){
+        for (Integer year : list) {
             model.addElement(year);
         }
     }
-    
+
     void fillTableDoanhThu() {
         DefaultTableModel model = (DefaultTableModel) tblDoanhThu.getModel();
         model.setRowCount(0);
-        int nam = (Integer)cboNam.getSelectedItem();
+        int nam = (Integer) cboNam.getSelectedItem();
         List<Object[]> list = dao.getDoanhthu(nam);
-        for(Object[] row : list){
+        for (Object[] row : list) {
             model.addRow(row);
         }
     }

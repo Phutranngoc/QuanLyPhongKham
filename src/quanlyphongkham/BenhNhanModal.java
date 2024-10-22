@@ -78,7 +78,6 @@ public class BenhNhanModal extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(610, 530));
-        setPreferredSize(new java.awt.Dimension(610, 530));
         setResizable(false);
         setSize(new java.awt.Dimension(738, 932));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -222,7 +221,7 @@ public class BenhNhanModal extends javax.swing.JDialog {
         jLabel1.setMaximumSize(new java.awt.Dimension(1200, 900));
         jLabel1.setMinimumSize(new java.awt.Dimension(700, 500));
         jLabel1.setPreferredSize(new java.awt.Dimension(700, 500));
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 640, 738));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 650, 590));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
