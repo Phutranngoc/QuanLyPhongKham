@@ -297,7 +297,7 @@ public class DonThuocPage extends javax.swing.JFrame {
         }
     }
 
-    private void loadAllDonThuoc() {
+    public void loadAllDonThuoc() {
         List<DonThuoc> list = dao.selectALL(); // Giả sử bạn có phương thức này trong DAO
         fillTable(list);
     }

@@ -93,7 +93,7 @@ public class DonThuocModal extends javax.swing.JDialog {
                 btnExitActionPerformed(evt);
             }
         });
-        getContentPane().add(btnExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 650, 110, 40));
+        getContentPane().add(btnExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 630, 110, 40));
 
         btnAdd.setText("Xác nhận");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
@@ -101,7 +101,7 @@ public class DonThuocModal extends javax.swing.JDialog {
                 btnAddActionPerformed(evt);
             }
         });
-        getContentPane().add(btnAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 650, 110, 40));
+        getContentPane().add(btnAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 630, 110, 40));
 
         panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -203,7 +203,7 @@ public class DonThuocModal extends javax.swing.JDialog {
         jPanel3.add(btnNew);
         btnNew.setBounds(780, 2, 100, 30);
 
-        panel.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 910, 310));
+        panel.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 910, 310));
 
         tblThuoc.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tblThuoc.setModel(new javax.swing.table.DefaultTableModel(
@@ -233,16 +233,16 @@ public class DonThuocModal extends javax.swing.JDialog {
         tblThuoc.setRowMargin(4);
         jScrollPane1.setViewportView(tblThuoc);
 
-        panel.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 330, 910, 280));
+        panel.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 310, 910, 280));
 
-        getContentPane().add(panel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        getContentPane().add(panel, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 30, 910, 580));
 
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Background/vector-MAY-2020-112.jpg"))); // NOI18N
         jLabel7.setMaximumSize(new java.awt.Dimension(700, 500));
         jLabel7.setMinimumSize(new java.awt.Dimension(700, 500));
         jLabel7.setPreferredSize(new java.awt.Dimension(700, 500));
-        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 930, 738));
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 990, 680));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -260,7 +260,12 @@ public class DonThuocModal extends javax.swing.JDialog {
             } else {
                 this.insert();
             }
+            DonThuocPage list = new DonThuocPage();
+            list.revalidate();
+            list.repaint();
+            
             this.dispose();
+            
         }
     }//GEN-LAST:event_btnAddActionPerformed
 

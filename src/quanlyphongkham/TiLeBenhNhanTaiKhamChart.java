@@ -11,26 +11,18 @@ import javax.swing.ImageIcon;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PiePlot3D;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.util.Rotation;
 
-public class DoanhThuChart extends javax.swing.JPanel {
+public class TiLeBenhNhanTaiKhamChart extends javax.swing.JPanel {
 
-    private String title = "Doanh Thu (Năm) Theo Tháng";
-    DefaultCategoryDataset dataset;
+    private String title = "Tỉ lệ Bệnh Nhân Quay Lại Khám Bệnh";
+    DefaultPieDataset dataset;
     JFreeChart chart;
     ChartPanel chartPanel;
     public int nam = 2024;
-
-    public DoanhThuChart() {
-        initComponents();
-        createChart();
-    }
 
     public void setNam(int valueNam) {
         this.nam = valueNam;
@@ -38,12 +30,12 @@ public class DoanhThuChart extends javax.swing.JPanel {
         createChart(); // Tạo lại biểu đồ
     }
 
-    private void createChart() {
-//        dataset = createDataset();
-//        chart = createChart(dataset, title);
-//        chartPanel = new ChartPanel(chart);
-//        this.add(chartPanel);
+    public TiLeBenhNhanTaiKhamChart() {
+        initComponents();
+        createChart();
+    }
 
+    private void createChart() {
         dataset = createDataset();
         chart = createChart(dataset, title);
 
@@ -55,50 +47,54 @@ public class DoanhThuChart extends javax.swing.JPanel {
         repaint(); // Vẽ lại
     }
 
-    private DefaultCategoryDataset createDataset() {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    private DefaultPieDataset createDataset() {
+        DefaultPieDataset result = new DefaultPieDataset();
 
         try {
             Connection connection = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;database=QuanLyPhongKham;encrypt=false;user=sa;password=12341234;");
-            CallableStatement stmt = connection.prepareCall("{call GetDoanhThuTheoThang(?)}");
-            stmt.setInt(1, nam);
+
+            // Gọi stored procedure với năm được chỉ định
+            CallableStatement stmt = connection.prepareCall("{call ThongKeTyLeBenhNhanQuayLai(?)}");
+            stmt.setInt(1, nam); // Sử dụng biến nam
 
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                int thang = rs.getInt("Thang");
-                double doanhThu = rs.getDouble("DoanhThu");
-                dataset.addValue(doanhThu, "Doanh Thu", "Tháng " + thang);
-            }
+                String tinhTrang = rs.getString("TinhTrang"); // Tên trạng thái (Quay lại hoặc Không quay lại)
+                int soLuong = rs.getInt("SoLuong"); // Số lượng bệnh nhân
 
+                result.setValue(tinhTrang, soLuong);
+            }
+            
             rs.close();
             stmt.close();
             connection.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return dataset;
+        return result;
     }
 
-    private JFreeChart createChart(CategoryDataset dataset, String title) {
-        return ChartFactory.createBarChart(
-                title,
-                " ",
-                "Doanh Thu (VND)",
-                dataset,
-                PlotOrientation.VERTICAL,
-                false, // Legend
-                true, // Tooltips
-                false // URLs
-        );
+    private JFreeChart createChart(PieDataset dataset, String title) {
+        JFreeChart chart = ChartFactory.createPieChart(title, dataset, true, false, false);
+        PiePlot plot = (PiePlot) chart.getPlot();
+        plot.setStartAngle(290);
+        plot.setDirection(Rotation.CLOCKWISE);
+        plot.setForegroundAlpha(0.5f);
+        plot.setLabelGenerator(new org.jfree.chart.labels.StandardPieSectionLabelGenerator("{0} - {2}")); //set label display (0:name 1:value 2:percent)
+        return chart;
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        DoanhThuBacSi = new javax.swing.JPanel();
+
         setLayout(new java.awt.BorderLayout());
+        add(DoanhThuBacSi, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     public String getTitle() {
@@ -111,11 +107,11 @@ public class DoanhThuChart extends javax.swing.JPanel {
     }
 
     public void setValues(String name, int values) {
-        dataset.setValue(values, "Doanh Thu", name);
+        dataset.setValue(name, values);
     }
 
     public void setValues(String name, double values) {
-        dataset.setValue(values, "Doanh Thu", name);
+        dataset.setValue(name, values);
     }
 
     public void setBackgroundImage(Icon image) {
@@ -126,6 +122,8 @@ public class DoanhThuChart extends javax.swing.JPanel {
     public void setBackgroundColor(Color color) {
         chart.setBackgroundPaint(color);
     }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel DoanhThuBacSi;
     // End of variables declaration//GEN-END:variables
 }

@@ -24,29 +24,10 @@ public class DoanhThuTheoBacSiChart extends javax.swing.JPanel {
     ChartPanel chartPanel;
     public int nam = 2024;
 
-    public void setNam(int nam) {
-        this.nam = nam;
-        System.out.println(nam);
-        updateChart();
-    }
-
-    private void updateChart() {
-        // Tạo dataset mới
-        dataset = createDataset();
-
-        // Tạo biểu đồ mới
-        chart = createChart(dataset, title);
-
-        // Xóa biểu đồ cũ
-        jPanel1.removeAll();
-
-        // Thêm biểu đồ mới vào jPanel1
-        chartPanel = new ChartPanel(chart);
-        jPanel1.add(chartPanel);
-
-        // Cập nhật lại layout và vẽ lại panel
-        jPanel1.revalidate();
-        jPanel1.repaint();
+    public void setNam(int valueNam) {
+        this.nam = valueNam;
+        System.out.println("Updating chart for year: " + nam);
+        createChart(); // Tạo lại biểu đồ
     }
 
     public DoanhThuTheoBacSiChart() {
@@ -57,8 +38,13 @@ public class DoanhThuTheoBacSiChart extends javax.swing.JPanel {
     private void createChart() {
         dataset = createDataset();
         chart = createChart(dataset, title);
-        chartPanel = new ChartPanel(chart);
-        this.add(chartPanel);
+
+        // Xóa và thêm biểu đồ mới
+        removeAll(); // Xóa nội dung cũ
+        ChartPanel chartPanel = new ChartPanel(chart);
+        add(chartPanel); // Thêm biểu đồ mới
+        revalidate(); // Cập nhật layout
+        repaint(); // Vẽ lại
     }
 
     private DefaultPieDataset createDataset() {
@@ -105,10 +91,10 @@ public class DoanhThuTheoBacSiChart extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        DoanhThuBacSi = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
-        add(jPanel1, java.awt.BorderLayout.CENTER);
+        add(DoanhThuBacSi, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     public String getTitle() {
@@ -138,6 +124,6 @@ public class DoanhThuTheoBacSiChart extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel DoanhThuBacSi;
     // End of variables declaration//GEN-END:variables
 }
