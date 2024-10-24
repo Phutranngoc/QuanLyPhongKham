@@ -36,8 +36,8 @@ public class DonThuocDAO extends PlusDAO<DonThuoc, String> {
     }
 
     @Override
-    public void delete(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+     public void delete(String id) {
+        Xjdbc.update(DELETE_DT, id);
     }
 
     @Override

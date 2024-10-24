@@ -12,9 +12,14 @@ import DAO.DonThuocDAO;
 import DAO.PhieuKhamDAO;
 import Entity.DonThuoc.DonThuocModalCallback;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
@@ -40,6 +45,7 @@ public class DonThuocModal extends javax.swing.JDialog {
         this.callback = callback; // Gán callback
         this.fillComboBoxThuoc();
         this.fillComboBoxBS();
+        this.setupTableMouseListener();
 
     }
 
@@ -78,6 +84,7 @@ public class DonThuocModal extends javax.swing.JDialog {
         btnThemThuoc = new javax.swing.JButton();
         cboBS = new javax.swing.JComboBox<>();
         btnNew = new javax.swing.JButton();
+        btnBotThuoc = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblThuoc = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
@@ -93,7 +100,7 @@ public class DonThuocModal extends javax.swing.JDialog {
                 btnExitActionPerformed(evt);
             }
         });
-        getContentPane().add(btnExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 630, 110, 40));
+        getContentPane().add(btnExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 630, 110, 40));
 
         btnAdd.setText("Xác nhận");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
@@ -101,7 +108,7 @@ public class DonThuocModal extends javax.swing.JDialog {
                 btnAddActionPerformed(evt);
             }
         });
-        getContentPane().add(btnAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 630, 110, 40));
+        getContentPane().add(btnAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 630, 110, 40));
 
         panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -166,11 +173,16 @@ public class DonThuocModal extends javax.swing.JDialog {
 
         cboThuoc.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         cboThuoc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboThuoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboThuocActionPerformed(evt);
+            }
+        });
         jPanel3.add(cboThuoc);
         cboThuoc.setBounds(310, 240, 160, 30);
 
         btnThemThuoc.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        btnThemThuoc.setText("Thêm");
+        btnThemThuoc.setText("+");
         btnThemThuoc.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnThemThuocMouseClicked(evt);
@@ -182,7 +194,7 @@ public class DonThuocModal extends javax.swing.JDialog {
             }
         });
         jPanel3.add(btnThemThuoc);
-        btnThemThuoc.setBounds(490, 240, 80, 30);
+        btnThemThuoc.setBounds(490, 240, 40, 30);
 
         cboBS.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         cboBS.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -203,6 +215,15 @@ public class DonThuocModal extends javax.swing.JDialog {
         jPanel3.add(btnNew);
         btnNew.setBounds(780, 2, 100, 30);
 
+        btnBotThuoc.setText("-");
+        btnBotThuoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBotThuocActionPerformed(evt);
+            }
+        });
+        jPanel3.add(btnBotThuoc);
+        btnBotThuoc.setBounds(540, 240, 40, 30);
+
         panel.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 910, 310));
 
         tblThuoc.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -211,14 +232,14 @@ public class DonThuocModal extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Mã Thuốc", "Tên Thuốc", "Đơn Vị", "Hạn Sử Dụng"
+                "Mã Thuốc", "Tên Thuốc", "Đơn Vị", "Hạn Sử Dụng", "Giá tiền", "Số lượng", ""
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false, true, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -258,14 +279,13 @@ public class DonThuocModal extends javax.swing.JDialog {
             if (this.isUpdate) {
                 this.update();
             } else {
-                this.insert();
+                if (checkInsert()) {
+                    this.insert();
+                }
             }
             DonThuocPage list = new DonThuocPage();
-            list.revalidate();
-            list.repaint();
-            
             this.dispose();
-            
+
         }
     }//GEN-LAST:event_btnAddActionPerformed
 
@@ -280,12 +300,20 @@ public class DonThuocModal extends javax.swing.JDialog {
 
     private void btnThemThuocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnThemThuocMouseClicked
         // TODO add your handling code here:
-        fillTHuoc();
+        fillThuoc();
     }//GEN-LAST:event_btnThemThuocMouseClicked
 
     private void cboBSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboBSActionPerformed
         txtBacSi.setText(String.valueOf(cboBS.getSelectedItem()));
     }//GEN-LAST:event_cboBSActionPerformed
+
+    private void cboThuocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboThuocActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cboThuocActionPerformed
+
+    private void btnBotThuocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBotThuocActionPerformed
+        reduceThuoc();
+    }//GEN-LAST:event_btnBotThuocActionPerformed
 
     /**
      * @param args the command line arguments
@@ -337,6 +365,7 @@ public class DonThuocModal extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnBotThuoc;
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnNew;
     private javax.swing.JButton btnThemThuoc;
@@ -365,7 +394,7 @@ public class DonThuocModal extends javax.swing.JDialog {
     int row = -1;
 
     String INSERT_DonThuoc = "insert into DonThuoc(MaDT,MaBS,Lieudung) values(?,?,?)";
-    String INSERT_ChiTietDonThuoc = "insert into Chitiet_DonThuoc_Thuoc(MaThuoc,MaDT) values(?,?)";
+    String INSERT_ChiTietDonThuoc = "insert into Chitiet_DonThuoc_Thuoc(MaThuoc,MaDT,SoLuong) values(?,?,?)";
     String UPDATE_SQL = "update DonThuoc set MaBS=?,Lieudung=? where MaDT=?";
     String UPDATE_CT = "update Chitiet_DonThuoc_Thuoc set MaThuoc=? where MaDT=? and MaThuoc=?";
     String DELETE_DT = "delete from DonThuoc where MaDT=?";
@@ -374,43 +403,74 @@ public class DonThuocModal extends javax.swing.JDialog {
 
     public void insert() {
         try {
-            Xjdbc.update(INSERT_DonThuoc, txtMaDonThuoc.getText(), txtBacSi.getText(), txtLieuDung.getText());
+            // Kiểm tra dữ liệu đầu vào
+            String maDonThuoc = txtMaDonThuoc.getText();
+            String bacSi = txtBacSi.getText();
+            String lieuDung = txtLieuDung.getText();
+
+            System.out.println("Mã Đơn Thuốc: " + maDonThuoc);
+            System.out.println("Bác Sĩ: " + bacSi);
+            System.out.println("Liều Dùng: " + lieuDung);
+
+            // Thêm đơn thuốc
+            Xjdbc.update(INSERT_DonThuoc, maDonThuoc, bacSi, lieuDung);
+            System.out.println("Đơn thuốc đã được thêm!");
 
             int dem = tblThuoc.getRowCount();
-            System.out.println(dem);
-            int i;
-            for (i = 0; i <= dem; i++) {
-                Xjdbc.update(INSERT_ChiTietDonThuoc, tblThuoc.getValueAt(i, 0), txtMaDonThuoc.getText());
+            System.out.println("Số lượng thuốc: " + dem);
+
+            // Lặp qua các dòng của bảng tblThuoc để thêm chi tiết đơn thuốc
+            for (int i = 0; i < dem; i++) { // Sửa điều kiện lặp
+                Object maThuoc = tblThuoc.getValueAt(i, 0);
+                Object soLuong = tblThuoc.getValueAt(i, 5);
+                System.out.println("Thêm chi tiết cho thuốc mã: " + maThuoc + ", Số lượng: " + soLuong);
+
+                // Cập nhật truy vấn để bao gồm số lượng
+                Xjdbc.update(INSERT_ChiTietDonThuoc, maThuoc, maDonThuoc, soLuong);
             }
+
+            // Nếu không có lỗi xảy ra, hiển thị thông báo thành công
             MsgBox.alert(this, "Thêm Thành Công");
+
+            // Gọi callback sau khi cập nhật thành công
             if (callback != null) {
-                callback.onDonThuocAdded();// Gọi callback sau khi cập nhật thành công
+                callback.onDonThuocAdded();
             }
         } catch (Exception e) {
-            System.out.println(e);
-
+            e.printStackTrace(); // In lỗi ra console
+            MsgBox.alert(this, "Thêm Thất Bại: " + e.getMessage()); // Thông báo lỗi cho người dùng
         }
-
     }
 
     public void update() {
         try {
+            // Cập nhật thông tin đơn thuốc
             Xjdbc.update(UPDATE_SQL, txtBacSi.getText(), txtLieuDung.getText(), txtMaDonThuoc.getText());
+
+            // Xóa tất cả chi tiết đơn thuốc hiện tại trước khi thêm mới
             Xjdbc.update(DELETE_DTCT, txtMaDonThuoc.getText());
+
+            // Lấy số lượng dòng trong bảng thuốc
             int dem = tblThuoc.getRowCount();
-            for (int i = 0; i <= dem; i++) {
-                Xjdbc.update(INSERT_ChiTietDonThuoc, tblThuoc.getValueAt(i, 0), txtMaDonThuoc.getText());
+
+            for (int i = 0; i < dem; i++) { // Thay <= thành < để tránh lỗi ArrayIndexOutOfBounds
+                // Lấy mã thuốc và số lượng từ bảng
+                String maThuoc = (String) tblThuoc.getValueAt(i, 0);
+                int soLuong = (Integer) tblThuoc.getValueAt(i, 5);
+
+                // Chèn chi tiết đơn thuốc với mã thuốc và số lượng
+                Xjdbc.update(INSERT_ChiTietDonThuoc, maThuoc, txtMaDonThuoc.getText(), soLuong);
             }
-            //MsgBox.confirm(this, "Lưu ý! Không được thay đổi số thuốc của đơn thuốc,mọi chi tiết thay đổi trong danh sách thuốc sẽ không được thực thi.");
-            MsgBox.alert(this, "Sửa thành công");
+
+            MsgBox.alert(this, "Cập nhật thành công");
+
             if (callback != null) {
-                callback.onDonThuocAdded();// Gọi callback sau khi cập nhật thành công
+                callback.onDonThuocAdded(); // Gọi callback sau khi cập nhật thành công
             }
         } catch (Exception e) {
-            System.out.println(e);
-
+            e.printStackTrace(); // In chi tiết lỗi ra console để dễ theo dõi
+            MsgBox.alert(this, "Có lỗi xảy ra khi sửa đơn thuốc. Vui lòng kiểm tra lại.");
         }
-
     }
 
     public void delete() {
@@ -447,44 +507,152 @@ public class DonThuocModal extends javax.swing.JDialog {
 
     void LoadDataThuoc(DonThuoc dt) {
         DefaultTableModel model = (DefaultTableModel) tblThuoc.getModel();
-        model.setRowCount(0);
+        model.setRowCount(0);  // Xóa tất cả các dòng hiện tại
+
+        // Lấy dữ liệu từ phương thức pkdao.getdonthuoc
         List<Object[]> list = pkdao.getdonthuoc(dt.getMaDT());
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy"); // Định dạng đầu ra mong muốn
+
         for (Object[] row : list) {
-            model.addRow(row);
+            String formattedDate = ""; // Khởi tạo biến ngày định dạng
+            try {
+                // Giả sử row[2] chứa đối tượng java.sql.Date
+                java.sql.Date sqlDate = (java.sql.Date) row[3];
+                if (sqlDate != null) {
+                    // Chuyển đổi sql.Date thành java.util.Date để định dạng
+                    formattedDate = outputFormat.format(sqlDate); // Định dạng thành DD/MM/YYYY
+                }
+            } catch (Exception e) {
+                System.out.println("Lỗi phân tích ngày: " + e.getMessage());
+            }
+
+            // Giả sử row[0] là mã thuốc, row[1] là tên thuốc, row[2] là hạn sử dụng,
+            // row[3] là đơn vị, và row[4] là giá tiền.
+            model.addRow(new Object[]{
+                row[0], // Mã thuốc
+                row[1], // Tên thuốc
+                row[2], // Đơn vị
+                formattedDate, // Hạn sử dụng
+                row[4], // Giá tiền
+                row[5],//Số lượng
+                "Xóa" // Cột cuối với chữ "Xóa"
+            });
         }
-        tblThuoc.setModel(model);
+
+        tblThuoc.setModel(model);  // Thiết lập lại model cho bảng
     }
 
     public List<String> selectThuoc() {
-        String sql = "select MaThuoc+ '-' +TenThuoc as Thuoc from Thuoc";
+        // Lấy đầy đủ thông tin từ cơ sở dữ liệu
+        String sql = "SELECT MaThuoc + '-' + TenThuoc + '-' + DonVi + '-' + CONVERT(nvarchar, HDS, 103) + '-' + CONVERT(nvarchar, GiaTien) AS Thuoc FROM Thuoc";
         List<String> list = new ArrayList<>();
+
         try {
             ResultSet rs = Xjdbc.query(sql);
             while (rs.next()) {
-                list.add(rs.getString("Thuoc"));
+                list.add(rs.getString("Thuoc"));  // Thuốc chứa MaThuoc, TenThuoc, HSD, DonVi, GiaTien
             }
             rs.getStatement().getConnection().close();
             return list;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     void fillComboBoxThuoc() {
         DefaultComboBoxModel model = (DefaultComboBoxModel) cboThuoc.getModel();
         model.removeAllElements();
-        List<String> list = selectThuoc();
-        for (String ma : list) {
-            model.addElement(ma);
+        List<String> list = selectThuoc();  // Lấy danh sách đầy đủ thông tin
+        System.out.print(list);
+
+        // Chỉ thêm mã thuốc và tên thuốc vào ComboBox
+        for (String thuoc : list) {
+            String[] parts = thuoc.split("-");
+            if (parts.length >= 2) {
+                model.addElement(parts[0] + "-" + parts[1]);  // Chỉ thêm MaThuoc và TenThuoc vào ComboBox
+            }
         }
     }
 
-    void fillTHuoc() {
+    void fillThuoc() {
         DefaultTableModel model = (DefaultTableModel) tblThuoc.getModel();
-        String index = (String) cboThuoc.getSelectedItem();
-        String List[] = index.split("-");
-        model.addRow(new Object[]{List[0], List[1], "", ""});
+        String selected = (String) cboThuoc.getSelectedItem();  // Lấy mã và tên thuốc từ ComboBox
+
+        if (selected != null) {
+            String[] parts = selected.split("-");
+            String maThuoc = parts[0];  // Lấy mã thuốc
+
+            // Tìm đầy đủ thông tin từ danh sách đã load sẵn
+            List<String> list = selectThuoc();
+            for (String thuoc : list) {
+                String[] thuocParts = thuoc.split("-");
+                if (thuocParts[0].equals(maThuoc)) {
+                    boolean found = false; // Biến để kiểm tra xem thuốc đã tồn tại trong bảng hay chưa
+
+                    // Lặp qua các hàng hiện tại trong bảng để kiểm tra sự tồn tại
+                    for (int i = 0; i < model.getRowCount(); i++) {
+                        String existingMaThuoc = (String) model.getValueAt(i, 0); // Cột mã thuốc
+                        int existingSoLuong = (int) model.getValueAt(i, 5); // Cột số lượng
+
+                        if (existingMaThuoc.equals(maThuoc)) {
+                            // Nếu đã tồn tại, tăng số lượng lên
+                            model.setValueAt(existingSoLuong + 1, i, 5); // Cập nhật số lượng
+                            found = true; // Đánh dấu là đã tìm thấy
+                            break; // Thoát khỏi vòng lặp
+                        }
+                    }
+
+                    if (!found) {
+                        // Nếu mã thuốc khớp, thêm đầy đủ thông tin vào bảng
+                        model.addRow(new Object[]{thuocParts[0], thuocParts[1], thuocParts[2], thuocParts[3], thuocParts[4], 1, "Xóa"});
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    void reduceThuoc() {
+        DefaultTableModel model = (DefaultTableModel) tblThuoc.getModel();
+        String selected = (String) cboThuoc.getSelectedItem();  // Lấy mã và tên thuốc từ ComboBox
+
+        if (selected != null) {
+            String[] parts = selected.split("-");
+            String maThuoc = parts[0];  // Lấy mã thuốc
+
+            // Lặp qua các hàng hiện tại trong bảng để kiểm tra sự tồn tại
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String existingMaThuoc = (String) model.getValueAt(i, 0); // Cột mã thuốc
+                int existingSoLuong = (model.getValueAt(i, 5) != null) ? (int) model.getValueAt(i, 5) : 1; // Cột số lượng
+
+                if (existingMaThuoc.equals(maThuoc)) {
+                    // Nếu số lượng lớn hơn 1, giảm số lượng
+                    if (existingSoLuong > 1) {
+                        model.setValueAt(existingSoLuong - 1, i, 5); // Giảm số lượng
+                    } else {
+                        // Nếu số lượng = 1, xóa hàng
+                        model.removeRow(i);
+                    }
+                    break; // Thoát khỏi vòng lặp sau khi đã xử lý
+                }
+            }
+        }
+    }
+
+    void setupTableMouseListener() {
+        tblThuoc.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = tblThuoc.rowAtPoint(e.getPoint());  // Lấy chỉ số dòng được nhấn
+                int col = tblThuoc.columnAtPoint(e.getPoint());  // Lấy chỉ số cột được nhấn
+
+                // Kiểm tra nếu người dùng nhấn vào cột cuối cùng (cột "Xóa")
+                if (col == tblThuoc.getColumnCount() - 1) {
+                    DefaultTableModel model = (DefaultTableModel) tblThuoc.getModel();
+                    model.removeRow(row);  // Xóa dòng tương ứng
+                }
+            }
+        });
     }
 
     boolean checkform() {

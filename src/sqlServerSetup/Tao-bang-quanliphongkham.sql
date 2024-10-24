@@ -114,7 +114,9 @@ BEGIN
         Thuoc.MaThuoc,
         Thuoc.Tenthuoc,
         Thuoc.DonVi,
-		Thuoc.HDS
+	Thuoc.HDS,
+        Thuoc.GiaTien,
+        Thuoc.SoLuong   
     FROM 
         Thuoc
     JOIN 

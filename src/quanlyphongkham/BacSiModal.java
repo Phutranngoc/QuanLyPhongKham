@@ -518,10 +518,12 @@ public class BacSiModal extends javax.swing.JDialog {
         } else if (txtChuyenNganh.getText().equalsIgnoreCase("")) {
             MsgBox.alert(this, "Bạn chưa nhập chuyên ngành!");
             return false;
-        } else if (txtGhiChu.getText().equalsIgnoreCase("")) {
+        } else if (txtDiaChi.getText().equalsIgnoreCase("")) {
             MsgBox.alert(this, "Bạn chưa nhập địa chỉ!");
             return false;
-        } else if (txtNgaySinh.getText().equalsIgnoreCase("")) {
+        } 
+
+        else if (txtNgaySinh.getText().equalsIgnoreCase("")) {
             MsgBox.alert(this, "Bạn chưa nhập Ngày sinh!");
             return false;
         } else if (txtSDT.getText().equalsIgnoreCase("")) {

@@ -12,6 +12,8 @@ import DAO.DonThuocDAO;
 import DAO.PhieuKhamDAO;
 import Entity.DonThuoc.DonThuocModalCallback;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,7 +21,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import util.Auth;
 import util.MsgBox;
 
 /**
@@ -146,7 +150,7 @@ public class DonThuocPage extends javax.swing.JFrame {
             int column = tblDanhSach.columnAtPoint(evt.getPoint()); // Lấy cột được nhấn
 
             // Kiểm tra nếu cột không phải là cột "Xóa"
-            if (column != 8) { // Giả sử cột "Thao Tác" là cột thứ 9 (index 8)
+            if (column != 3) {
                 this.row = row; // Cập nhật hàng được chọn
                 this.edit();
             }
@@ -232,28 +236,33 @@ public class DonThuocPage extends javax.swing.JFrame {
     String UPDATE_SQL = "update DonThuoc set MaBS=?,Lieudung=? where MaDT=?";
     String UPDATE_CT = "update Chitiet_DonThuoc_Thuoc set MaThuoc=? where MaDT=? and MaThuoc=?";
     String DELETE_DT = "delete from DonThuoc where MaDT=?";
-    String DELETE_DTCT = "delete from Chitiet_DonThuoc_Thuoc  where MaDT=?";
+    String DELETE_DTCT = "DELETE FROM Chitiet_DonThuoc_Thuoc WHERE MaDT = ?";
     String SELECT_ALL_SQL = "select * from DonThuoc";
 
-//    public void insert() {
-//        try {
-//            Xjdbc.update(INSERT_DonThuoc, txtMaDonThuoc.getText(), txtBacSi.getText(), txtLieuDung.getText());
-//
-//            int dem = tblThuoc.getRowCount();
-//            System.out.println(dem);
-//            int i;
-//            for (i = 0; i <= dem; i++) {
-//                Xjdbc.update(INSERT_ChiTietDonThuoc, tblThuoc.getValueAt(i, 0), txtMaDonThuoc.getText());
-//            }
-//            MsgBox.alert(this, "Thêm Thành Công");
-//        } catch (Exception e) {
-//            System.out.println(e);
-//
-//        }
-//
-//        fillTable();
-//        tabThongTin.setSelectedIndex(1);
-//    }
+    private void delete(String maDT) {
+        if (!Auth.isManager()) {
+            MsgBox.alert(this, "Bạn không có quyền xóa");
+        } else {
+            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có thật sự muốn xóa đơn thuốc này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    // Xóa các chi tiết đơn thuốc trước
+
+                    Xjdbc.update(DELETE_DTCT, maDT);
+
+                    // Sau đó xóa đơn thuốc chính
+                    Xjdbc.update(DELETE_DT, maDT);
+
+                    this.loadAllDonThuoc(); 
+                    MsgBox.alert(this, "Xóa đơn thuốc thành công!");
+                } catch (Exception e) {
+                    MsgBox.alert(this, "Xóa đơn thuốc thất bại. Vui lòng kiểm tra lại.");
+
+                }
+            }
+        }
+    }
+
     void create() {
         // Tạo một modal BacSiForm và hiển thị nó
         DonThuocModal modal = new DonThuocModal(this, true, false, new DonThuocModalCallback() {
@@ -288,9 +297,22 @@ public class DonThuocPage extends javax.swing.JFrame {
                 Object[] row = {
                     th.getMaDT(),
                     th.getMaBS(),
-                    th.getLieudung(),};
+                    th.getLieudung(),
+                    "Xóa"
+                };
                 model.addRow(row);
             }
+            tblDanhSach.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    int row = tblDanhSach.rowAtPoint(e.getPoint());
+                    int column = tblDanhSach.columnAtPoint(e.getPoint());
+                    if (column == 3) { // Nếu cột được nhấp là cột "Xóa"
+                        String maDT = (String) tblDanhSach.getValueAt(row, 0); // Lấy mã bệnh nhân
+                        delete(maDT); // Gọi hàm xóa
+                    }
+                }
+            });
         } catch (Exception e) {
             System.out.println(e);
             MsgBox.alert(this, "Lỗi truy vấn dữ liệu!");

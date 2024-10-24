@@ -15,6 +15,7 @@ import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.util.Rotation;
+import util.Xjdbc;
 
 public class TiLeBenhNhanTaiKhamChart extends javax.swing.JPanel {
 
@@ -51,7 +52,7 @@ public class TiLeBenhNhanTaiKhamChart extends javax.swing.JPanel {
         DefaultPieDataset result = new DefaultPieDataset();
 
         try {
-            Connection connection = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;database=QuanLyPhongKham;encrypt=false;user=sa;password=12341234;");
+            Connection connection = Xjdbc.getConnection();
 
             // Gọi stored procedure với năm được chỉ định
             CallableStatement stmt = connection.prepareCall("{call ThongKeTyLeBenhNhanQuayLai(?)}");

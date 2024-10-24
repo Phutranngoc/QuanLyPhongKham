@@ -21,8 +21,8 @@ import java.util.List;
  */
 public class PhieuKhamDAO extends PlusDAO<PhieuKham, String> {
 
-    String Insert_Sql = "INSERT INTO PhieuKham (MaPhieuKham, MaDT, MaBS, MaBN , NgayKham, MotaBenh)\n"
-            + "VALUES (?,?,?,?,?,?)";
+    String Insert_Sql = "INSERT INTO PhieuKham (MaPhieuKham, MaDT, MaBS, MaBN,ThanhTien, NgayKham, MotaBenh)\n"
+            + "VALUES (?,?,?,?,?,?,?)";
     String Update_Sql = "UPDATE PhieuKham\n"
             + "SET MaDT = ?, MaBS = ?, MaBN = ?, ThanhTien = ? ,NgayKham = ?, MotaBenh = ?\n"
             + "where maphieukham = ?";
@@ -40,7 +40,8 @@ public class PhieuKhamDAO extends PlusDAO<PhieuKham, String> {
                 entity.getMaPK(),
                 entity.getMaDT(),
                 entity.getMaBS(),
-                entity.getMaBN(),              
+                entity.getMaBN(),
+                entity.getThanhTien(),
                 entity.getNgaykham(),
                 entity.getMotaBenh()); //To change body of generated methods, choose Tools | Templates.
     }
@@ -114,18 +115,20 @@ public class PhieuKhamDAO extends PlusDAO<PhieuKham, String> {
         }
     }
 
-  public List<Object[]> getbenhnhan(String maphieukham) {
+    public List<Object[]> getbenhnhan(String maphieukham) {
         String sql = "{CALL sp_benhnhan(?)}";
-        String[] cols = {"hoten", "ngaysinh", "gioitinh","sdt","mabn","maphieukham","madt","mabs"
-        ,"motabenh","ngaykham","thanhtien"};
+        String[] cols = {"hoten", "ngaysinh", "gioitinh", "sdt", "mabn", "maphieukham", "madt", "mabs",
+            "motabenh", "ngaykham", "thanhtien"};
         return this.getListOfArray(sql, cols, maphieukham);
     }
-    
-        public List<Object[]> getdonthuoc(String madt) {
-        String sql = "{CALL sp_LoadTableThuoc(?)}";
-        String[] cols = {"Mathuoc", "Tenthuoc", "HDS","DonVi"};
+
+    public List<Object[]> getdonthuoc(String madt) {
+        String sql = "{CALL sp_LoadTableThuoc(?)}"; // Gọi stored procedure
+        String[] cols = {"Mathuoc", "Tenthuoc", "DonVi", "HDS", "GiaTien", "SoLuong"}; // Thêm cột Giá tiền
         return this.getListOfArray(sql, cols, madt);
+
     }
+
     private List<Object[]> getListOfArray(String sql, String[] cols, Object... args) {
         try {
             List<Object[]> list = new ArrayList<>();

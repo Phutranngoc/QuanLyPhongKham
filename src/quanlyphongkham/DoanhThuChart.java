@@ -18,6 +18,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.util.Rotation;
+import util.Xjdbc;
 
 public class DoanhThuChart extends javax.swing.JPanel {
 
@@ -59,7 +60,7 @@ public class DoanhThuChart extends javax.swing.JPanel {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         try {
-            Connection connection = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;database=QuanLyPhongKham;encrypt=false;user=sa;password=12341234;");
+            Connection connection = Xjdbc.getConnection();
             CallableStatement stmt = connection.prepareCall("{call GetDoanhThuTheoThang(?)}");
             stmt.setInt(1, nam);
 

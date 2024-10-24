@@ -78,6 +78,7 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
         jLabel9 = new javax.swing.JLabel();
         txtSDT = new javax.swing.JTextField();
         cboBenhNhan = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
         btnExit = new javax.swing.JButton();
         btnXoa = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
@@ -101,9 +102,9 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel10.setText("Thông tin Phiếu Khám");
         jPanel3.add(jLabel10);
-        jLabel10.setBounds(3, 3, 180, 22);
+        jLabel10.setBounds(10, 5, 180, 22);
         jPanel3.add(jSeparator2);
-        jSeparator2.setBounds(3, 32, 890, 2);
+        jSeparator2.setBounds(3, 32, 890, 3);
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel11.setText("Mã Bác Sĩ");
@@ -195,14 +196,14 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel2.setText("Thông Tin Bệnh Nhân");
         jPanel2.add(jLabel2);
-        jLabel2.setBounds(3, 3, 180, 22);
+        jLabel2.setBounds(10, 5, 180, 22);
         jPanel2.add(jSeparator1);
-        jSeparator1.setBounds(3, 32, 890, 2);
+        jSeparator1.setBounds(3, 32, 890, 3);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel3.setText("Họ Và Tên BN");
+        jLabel3.setText("Họ và tên");
         jPanel2.add(jLabel3);
-        jLabel3.setBounds(15, 83, 113, 22);
+        jLabel3.setBounds(15, 90, 77, 22);
 
         txtMaBN.setEditable(false);
         txtMaBN.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
@@ -217,32 +218,32 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
         txtTenBN.setEditable(false);
         txtTenBN.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jPanel2.add(txtTenBN);
-        txtTenBN.setBounds(138, 85, 414, 30);
+        txtTenBN.setBounds(138, 85, 310, 30);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel5.setText("Giới Tính");
         jPanel2.add(jLabel5);
-        jLabel5.setBounds(20, 140, 71, 22);
+        jLabel5.setBounds(15, 140, 71, 22);
 
         buttonGroupGioiTinh.add(rdoNam);
         rdoNam.setText("Nam");
         jPanel2.add(rdoNam);
-        rdoNam.setBounds(130, 140, 55, 25);
+        rdoNam.setBounds(130, 140, 49, 21);
 
         buttonGroupGioiTinh.add(rdoNu);
         rdoNu.setText("Nữ");
         jPanel2.add(rdoNu);
-        rdoNu.setBounds(220, 140, 45, 25);
+        rdoNu.setBounds(220, 140, 39, 21);
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel8.setText("Tuổi");
+        jLabel8.setText("Năm sinh");
         jPanel2.add(jLabel8);
-        jLabel8.setBounds(620, 50, 35, 22);
+        jLabel8.setBounds(520, 40, 90, 22);
 
         txtTuoi.setEditable(false);
         txtTuoi.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jPanel2.add(txtTuoi);
-        txtTuoi.setBounds(685, 43, 44, 30);
+        txtTuoi.setBounds(800, 40, 44, 30);
 
         txtNgaySinh.setEditable(false);
         txtNgaySinh.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
@@ -252,17 +253,17 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
             }
         });
         jPanel2.add(txtNgaySinh);
-        txtNgaySinh.setBounds(747, 43, 121, 30);
+        txtNgaySinh.setBounds(650, 40, 130, 30);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel9.setText("SĐT");
+        jLabel9.setText("Số điện thoại");
         jPanel2.add(jLabel9);
-        jLabel9.setBounds(620, 90, 50, 22);
+        jLabel9.setBounds(520, 90, 140, 22);
 
         txtSDT.setEditable(false);
         txtSDT.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jPanel2.add(txtSDT);
-        txtSDT.setBounds(688, 85, 180, 30);
+        txtSDT.setBounds(650, 90, 240, 30);
 
         cboBenhNhan.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         cboBenhNhan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -273,6 +274,10 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
         });
         jPanel2.add(cboBenhNhan);
         cboBenhNhan.setBounds(280, 40, 100, 30);
+
+        jLabel1.setText("tuổi");
+        jPanel2.add(jLabel1);
+        jLabel1.setBounds(850, 50, 21, 16);
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 908, 190));
 
@@ -425,8 +430,33 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
     }//GEN-LAST:event_cboBenhNhanActionPerformed
 
     private void cboDTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboDTActionPerformed
-        // TODO add your handling code here:
-        txtMaDonThuoc.setText(String.valueOf(cboDT.getSelectedItem()));
+        // Lấy mã đơn thuốc từ ComboBox
+        String maDonThuoc = String.valueOf(cboDT.getSelectedItem());
+        txtMaDonThuoc.setText(maDonThuoc);
+
+        // Tính tổng tiền
+        double tongTien = 0; // Khởi tạo biến tổng tiền
+
+        // Lấy danh sách chi tiết đơn thuốc dựa trên mã đơn thuốc
+        List<Object[]> chiTietDonThuoc = pkdao.getdonthuoc(maDonThuoc);
+
+        // Duyệt qua danh sách chi tiết đơn thuốc
+        for (Object[] thuoc : chiTietDonThuoc) {
+            double giaTien = Double.parseDouble(thuoc[4].toString()); 
+
+            // Kiểm tra số lượng, nếu là null thì gán giá trị mặc định là 1
+            int soLuong;
+            if (thuoc[5] == null) {
+                soLuong = 1; // Gán giá trị mặc định
+            } else {
+                soLuong = Integer.parseInt(thuoc[5].toString()); 
+            }
+
+            tongTien += giaTien * soLuong; // Tính tổng tiền
+        }
+
+        // Hiển thị tổng tiền vào trường txtTongTien
+        txtTongTien.setText(String.valueOf(tongTien));
     }//GEN-LAST:event_cboDTActionPerformed
 
     private void cboBSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboBSActionPerformed
@@ -494,6 +524,7 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
     private javax.swing.JComboBox<String> cboBS;
     private javax.swing.JComboBox<String> cboBenhNhan;
     private javax.swing.JComboBox<String> cboDT;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -676,8 +707,10 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
         try {
             String maphieukham = (String) tblBang.getValueAt(tblBang.getSelectedRow(), 0);
             List<Object[]> list = pkdao.getbenhnhan(maphieukham);
-            for (Object[] cd : list) {
 
+            double tongTien = 0; // Khởi tạo biến tổng tiền
+
+            for (Object[] cd : list) {
                 txtTenBN.setText((String) cd[0]);
                 txtNgaySinh.setText(String.valueOf(cd[1]));
                 if (cd[2].equals("Nam")) {
@@ -692,13 +725,31 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
                 txtMaBS.setText((String.valueOf(cd[7])));
                 txtMoTaBenh.setText((String.valueOf(cd[8])));
                 txtNgayKham.setText((String.valueOf(cd[9])));
-                txtTongTien.setText((String.valueOf(cd[10])));
 
+                // Tính tổng tiền từ danh sách thuốc
+                // Tính tổng tiền từ danh sách thuốc
+                List<Object[]> chiTietDonThuoc = pkdao.getdonthuoc(txtMaDonThuoc.getText()); // Lấy danh sách chi tiết đơn thuốc
+                for (Object[] thuoc : chiTietDonThuoc) {
+                    double giaTien = Double.parseDouble(thuoc[4].toString()); // Giả sử cột 4 là giá tiền
+
+                    // Kiểm tra số lượng, nếu là null thì gán giá trị mặc định là 1
+                    int soLuong;
+                    if (thuoc[5] == null) {
+                        soLuong = 1; // Gán giá trị mặc định
+                    } else {
+                        soLuong = Integer.parseInt(thuoc[5].toString()); // Giả sử cột 5 là số lượng
+                    }
+
+                    tongTien += giaTien * soLuong; // Tính tổng tiền
+                }
             }
+
+            // Hiển thị tổng tiền vào trường txtTongTien
+            txtTongTien.setText(String.valueOf(tongTien));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     boolean checkform() {

@@ -15,6 +15,7 @@ import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.util.Rotation;
+import util.Xjdbc;
 
 public class TiLeSoHuuBaoHiemChart extends javax.swing.JPanel {
 
@@ -39,7 +40,7 @@ public class TiLeSoHuuBaoHiemChart extends javax.swing.JPanel {
         DefaultPieDataset result = new DefaultPieDataset();
 
         try {
-            Connection connection = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;database=QuanLyPhongKham;encrypt=false;user=sa;password=12341234;");
+           Connection connection = Xjdbc.getConnection();
             CallableStatement stmt = connection.prepareCall("{call GetTiLeBaoHiem}");
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
