@@ -59,8 +59,8 @@
             </Property>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="4" rowCount="4">
-                <Column editable="false" title="M&#xe3; &#x110;&#x1a1;n Thu&#x1ed1;c" type="java.lang.Object"/>
-                <Column editable="false" title="M&#xe3; B&#xe1;c S&#x129;" type="java.lang.Object"/>
+                <Column editable="false" title="M&#xe3; &#x111;&#x1a1;n thu&#x1ed1;c" type="java.lang.Object"/>
+                <Column editable="false" title="B&#xe1;c s&#x129; k&#xea; &#x111;&#x1a1;n" type="java.lang.Object"/>
                 <Column editable="false" title="Li&#x1ec1;u D&#xf9;ng" type="java.lang.Object"/>
                 <Column editable="true" title="" type="java.lang.Object"/>
               </Table>

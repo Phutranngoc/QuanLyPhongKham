@@ -7,11 +7,15 @@ package quanlyphongkham;
 
 import DAO.BenhNhanDAO;
 import DAO.PhieuKhamDAO;
+import Entity.Benhnhan;
 import Entity.PhieuKham;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
@@ -131,6 +135,11 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
                 txtNgayKhamMouseClicked(evt);
             }
         });
+        txtNgayKham.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNgayKhamActionPerformed(evt);
+            }
+        });
         jPanel3.add(txtNgayKham);
         txtNgayKham.setBounds(140, 130, 310, 30);
 
@@ -152,7 +161,7 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
         jLabel13.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel13.setText("Ngày Khám");
         jPanel3.add(jLabel13);
-        jLabel13.setBounds(10, 130, 110, 22);
+        jLabel13.setBounds(15, 135, 110, 22);
 
         txtMaBS.setEditable(false);
         txtMaBS.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
@@ -208,17 +217,22 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
         txtMaBN.setEditable(false);
         txtMaBN.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jPanel2.add(txtMaBN);
-        txtMaBN.setBounds(140, 40, 120, 30);
+        txtMaBN.setBounds(140, 40, 150, 30);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel4.setText("Mã BN");
+        jLabel4.setText("Mã bệnh nhân");
         jPanel2.add(jLabel4);
-        jLabel4.setBounds(15, 41, 100, 22);
+        jLabel4.setBounds(15, 41, 120, 22);
 
         txtTenBN.setEditable(false);
         txtTenBN.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        txtTenBN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTenBNActionPerformed(evt);
+            }
+        });
         jPanel2.add(txtTenBN);
-        txtTenBN.setBounds(138, 85, 310, 30);
+        txtTenBN.setBounds(140, 85, 310, 30);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel5.setText("Giới Tính");
@@ -242,6 +256,11 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
 
         txtTuoi.setEditable(false);
         txtTuoi.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        txtTuoi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTuoiActionPerformed(evt);
+            }
+        });
         jPanel2.add(txtTuoi);
         txtTuoi.setBounds(800, 40, 44, 30);
 
@@ -273,11 +292,11 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
             }
         });
         jPanel2.add(cboBenhNhan);
-        cboBenhNhan.setBounds(280, 40, 100, 30);
+        cboBenhNhan.setBounds(320, 40, 130, 30);
 
         jLabel1.setText("tuổi");
         jPanel2.add(jLabel1);
-        jLabel1.setBounds(850, 50, 21, 16);
+        jLabel1.setBounds(860, 50, 21, 16);
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 908, 190));
 
@@ -330,7 +349,7 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
                 {null, null, null, null}
             },
             new String [] {
-                "Mã Phiếu Khám", "Mã DT", "Mã BS", "Mã BN"
+                "Mã phiếu khám", "Mã đơn thuốc", "Mã bác sĩ", "Mã bệnh nhân"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -390,7 +409,9 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        update();
+        if (checkform()) {
+            update();
+        }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
@@ -400,9 +421,19 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
     private void tblBangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBangMouseClicked
         try {
             BenhNhan_PhieuKham();
-            txtTuoi.setText(String.valueOf(tuoi(txtNgaySinh.getText())));
-            //edit();
-            //test();
+
+            // Lấy ngày sinh từ ô văn bản và chuyển đổi định dạng
+            String ngaySinhText = txtNgaySinh.getText();
+            String convertedDate = convertDateFormat(ngaySinhText);
+
+            // Kiểm tra xem ngày được chuyển đổi có hợp lệ không
+            if (convertedDate != null) {
+                int tuoi = tuoi(convertedDate); // Tính tuổi với định dạng yyyy-MM-dd
+                txtTuoi.setText(String.valueOf(tuoi));
+            } else {
+                MsgBox.alert(this, "Ngày sinh không hợp lệ!");
+            }
+
         } catch (Exception e) {
             MsgBox.alert(this, "Lỗi");
             System.out.println(e);
@@ -425,8 +456,59 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
     }//GEN-LAST:event_txtNgayKhamMouseClicked
 
     private void cboBenhNhanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboBenhNhanActionPerformed
-        // TODO add your handling code here:
-        txtMaBN.setText(String.valueOf(cboBenhNhan.getSelectedItem()));
+        // Lấy mã bệnh nhân đã chọn
+        String maBN = String.valueOf(cboBenhNhan.getSelectedItem());
+
+        // Cập nhật mã bệnh nhân
+        txtMaBN.setText(maBN);
+
+        // Lấy thông tin bệnh nhân từ DAO
+        System.out.print(maBN);
+
+        // Gọi phương thức selectById để lấy thông tin bệnh nhân
+        Benhnhan benhNhan = bndao.selectById(maBN);
+        System.out.print(benhNhan);
+
+        // Kiểm tra xem có dữ liệu không
+        if (benhNhan != null) {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd"); // Định dạng ngày trong cơ sở dữ liệu
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy"); // Định dạng đầu ra mong muốn
+            // Lấy thông tin bệnh nhân từ đối tượng
+            String hoTen = benhNhan.getTenBN(); // Giả sử có phương thức getHoTen()
+            String soDienThoai = benhNhan.getSDT(); // Giả sử có phương thức getHoTen()
+            String dateString = benhNhan.getNgaySinh(); // e.g., "YYYY-MM-DD"
+            String formattedDate = dateString; // Mặc định là giá trị gốc
+            try {
+                Date date = inputFormat.parse(dateString); // Phân tích chuỗi ngày gốc
+                formattedDate = outputFormat.format(date); // Định dạng thành DD/MM/YYYY
+            } catch (ParseException e) {
+                System.out.println("Lỗi phân tích ngày: " + e.getMessage());
+                // Tùy chọn, xử lý lỗi hoặc đặt formattedDate thành thông điệp lỗi
+            }
+
+            // Cập nhật các trường thông tin
+            // Tính tuổi và cập nhật vào txtTuoi
+            int tuoi = tuoi(benhNhan.getNgaySinh()); // Tính tuổi
+            txtTenBN.setText(hoTen);
+            txtSDT.setText(soDienThoai);
+            txtTuoi.setText(String.valueOf(tuoi));
+            txtNgaySinh.setText(formattedDate);
+            // Cập nhật giới tính
+            if ("Nam".equalsIgnoreCase(benhNhan.getGioiTinh())) { // Giả sử có phương thức getGioiTinh()
+                rdoNam.setSelected(true);
+                rdoNu.setSelected(false);
+            } else {
+                rdoNam.setSelected(false);
+                rdoNu.setSelected(true);
+            }
+
+        } else {
+            // Nếu không tìm thấy thông tin, có thể xóa trường
+            txtTenBN.setText("");
+            txtSDT.setText("");
+            txtTuoi.setText("");
+            txtNgaySinh.setText("");
+        }
     }//GEN-LAST:event_cboBenhNhanActionPerformed
 
     private void cboDTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboDTActionPerformed
@@ -442,14 +524,14 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
 
         // Duyệt qua danh sách chi tiết đơn thuốc
         for (Object[] thuoc : chiTietDonThuoc) {
-            double giaTien = Double.parseDouble(thuoc[4].toString()); 
+            double giaTien = Double.parseDouble(thuoc[4].toString());
 
             // Kiểm tra số lượng, nếu là null thì gán giá trị mặc định là 1
             int soLuong;
             if (thuoc[5] == null) {
                 soLuong = 1; // Gán giá trị mặc định
             } else {
-                soLuong = Integer.parseInt(thuoc[5].toString()); 
+                soLuong = Integer.parseInt(thuoc[5].toString());
             }
 
             tongTien += giaTien * soLuong; // Tính tổng tiền
@@ -463,6 +545,18 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
         // TODO add your handling code here:
         txtMaBS.setText(String.valueOf(cboBS.getSelectedItem()));
     }//GEN-LAST:event_cboBSActionPerformed
+
+    private void txtTenBNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTenBNActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTenBNActionPerformed
+
+    private void txtTuoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTuoiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTuoiActionPerformed
+
+    private void txtNgayKhamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayKhamActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNgayKhamActionPerformed
 
     /**
      * @param args the command line arguments
@@ -566,6 +660,23 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
     PhieuKhamDAO pkdao = new PhieuKhamDAO();
     int row = -1;
 
+    private String convertDateFormat(String date) {
+        try {
+            // Định dạng cho ngày tháng đầu vào
+            SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
+            // Định dạng cho ngày tháng đầu ra
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            // Phân tích ngày tháng từ chuỗi
+            Date parsedDate = inputFormat.parse(date);
+            // Chuyển đổi sang định dạng mới
+            return outputFormat.format(parsedDate);
+        } catch (ParseException e) {
+            System.out.println("Lỗi phân tích ngày: " + e.getMessage());
+            return null; // Trả về null nếu có lỗi
+        }
+    }
+
     void init() {
         this.setLocationRelativeTo(null);
         // this.row = -1;
@@ -607,7 +718,9 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
         pk.setMaBS(txtMaBS.getText());
         pk.setMaDT(txtMaDonThuoc.getText());
         pk.setMotaBenh(txtMoTaBenh.getText());
-        pk.setNgaykham(txtNgayKham.getText());
+        // Chuyển đổi định dạng ngày trước khi lưu
+        String ngayKhamConverted = convertDateFormat(txtNgayKham.getText());
+        pk.setNgaykham(ngayKhamConverted); // Lưu ngày đã chuyển đổi
         pk.setMaBN(txtMaBN.getText());
         pk.setThanhTien(Double.parseDouble(txtTongTien.getText()));
         //
@@ -646,7 +759,7 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
         txtMaBS.setText("");
         txtMaBN.setText("");
         txtMoTaBenh.setText("");
-        txtNgayKham.setText("yyyy-MM-dd");
+        txtNgayKham.setText("dd/MM/yyyy");
         txtTongTien.setText("0");
         txtTuoi.setText("");
         txtTenBN.setText("");
@@ -660,12 +773,13 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
     void insert() {
         PhieuKham pk = getForm();
         try {
+
             pkdao.insert(pk);
             this.fillTable();
             this.clearForm();
-            MsgBox.alert(this, "thêm phiếu khám thành công!");
+            MsgBox.alert(this, "Thêm phiếu khám thành công!");
         } catch (Exception e) {
-            MsgBox.alert(this, "thêm phiếu khám thất bại!!!");
+            MsgBox.alert(this, "Thêm phiếu khám thất bại!!!");
             System.out.print(e);
         }
     }
@@ -676,9 +790,9 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
             pkdao.update(pk);
             this.fillTable();
             this.clearForm();
-            MsgBox.alert(this, "cập nhật phiếu khám thành công!");
+            MsgBox.alert(this, "Cập nhật phiếu khám thành công!");
         } catch (Exception e) {
-            MsgBox.alert(this, "cập nhật phiếu khám thất bại!!!");
+            MsgBox.alert(this, "Cập nhật phiếu khám thất bại!!!");
             System.out.println(e);
         }
     }
@@ -710,23 +824,41 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
 
             double tongTien = 0; // Khởi tạo biến tổng tiền
 
+            // Định dạng cho ngày tháng
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy"); // Định dạng chuỗi đầu ra
+
             for (Object[] cd : list) {
                 txtTenBN.setText((String) cd[0]);
-                txtNgaySinh.setText(String.valueOf(cd[1]));
+
+                // Lấy và định dạng ngày sinh
+                String formattedNgaySinh = "";
+                if (cd[1] instanceof Date) {
+                    Date ngaySinh = (Date) cd[1]; // Lấy ngày sinh
+                    formattedNgaySinh = outputFormat.format(ngaySinh); // Định dạng thành dd/MM/yyyy
+                }
+                txtNgaySinh.setText(formattedNgaySinh); // Cập nhật trường ngày sinh
+
                 if (cd[2].equals("Nam")) {
                     rdoNam.setSelected(true);
                 } else {
                     rdoNu.setSelected(true);
                 }
+
                 txtSDT.setText((String.valueOf(cd[3])));
                 txtMaBN.setText((String.valueOf(cd[4])));
                 txtMaPhieuKham.setText((String.valueOf(cd[5])));
                 txtMaDonThuoc.setText((String.valueOf(cd[6])));
                 txtMaBS.setText((String.valueOf(cd[7])));
                 txtMoTaBenh.setText((String.valueOf(cd[8])));
-                txtNgayKham.setText((String.valueOf(cd[9])));
 
-                // Tính tổng tiền từ danh sách thuốc
+                // Lấy và định dạng ngày khám
+                String formattedNgayKham = "";
+                if (cd[9] instanceof Date) {
+                    Date ngayKham = (Date) cd[9]; // Lấy ngày khám
+                    formattedNgayKham = outputFormat.format(ngayKham); // Định dạng thành dd/MM/yyyy
+                }
+                txtNgayKham.setText(formattedNgayKham); // Cập nhật trường ngày khám
+
                 // Tính tổng tiền từ danh sách thuốc
                 List<Object[]> chiTietDonThuoc = pkdao.getdonthuoc(txtMaDonThuoc.getText()); // Lấy danh sách chi tiết đơn thuốc
                 for (Object[] thuoc : chiTietDonThuoc) {
@@ -753,24 +885,24 @@ public class QuanLyPhieuKham extends javax.swing.JDialog {
     }
 
     boolean checkform() {
-        String regex = "^\\d{4}-\\d{2}-\\d{2}$";
+        String regex = "^\\d{2}/\\d{2}/\\d{4}$";
         if (txtMaPhieuKham.getText().length() == 0) {
-            MsgBox.alert(this, "không để trống mã phiếu khám");
+            MsgBox.alert(this, "Không để trống mã phiếu khám");
             return false;
         } else if (txtMaBN.getText().length() == 0) {
-            MsgBox.alert(this, "không để trống mã bệnh nhân");
+            MsgBox.alert(this, "Không để trống mã bệnh nhân");
             return false;
         } else if (txtMaBS.getText().length() == 0) {
-            MsgBox.alert(this, "không để trống mã bác sĩ");
+            MsgBox.alert(this, "Không để trống mã bác sĩ");
             return false;
         } else if (txtMaDonThuoc.getText().length() == 0) {
-            MsgBox.alert(this, "không để trống mã đơn thuốc");
+            MsgBox.alert(this, "Không để trống mã đơn thuốc");
             return false;
         } else if (!txtNgayKham.getText().matches(regex)) {
-            MsgBox.alert(this, "không đúng định dạng ngày khám!!! vd 2001-02-26");
+            MsgBox.alert(this, "Không đúng định dạng ngày khám!!! vd 26/10/2001");
             return false;
         } else if (txtMoTaBenh.getText().length() == 0) {
-            MsgBox.alert(this, "không để trống mô tả bệnh");
+            MsgBox.alert(this, "Không để trống mô tả bệnh");
             return false;
         }
 

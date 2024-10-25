@@ -122,6 +122,12 @@ public class PhieuKhamDAO extends PlusDAO<PhieuKham, String> {
         return this.getListOfArray(sql, cols, maphieukham);
     }
 
+    public List<Object[]> getBenhNhanById(String maBN) {
+        String sql = "SELECT hoten, ngaysinh FROM BenhNhan WHERE mabn = ?";
+        String[] cols = {"hoten", "ngaysinh"};
+        return this.getListOfArray(sql, cols, maBN);
+    }
+
     public List<Object[]> getdonthuoc(String madt) {
         String sql = "{CALL sp_LoadTableThuoc(?)}"; // Gọi stored procedure
         String[] cols = {"Mathuoc", "Tenthuoc", "DonVi", "HDS", "GiaTien", "SoLuong"}; // Thêm cột Giá tiền

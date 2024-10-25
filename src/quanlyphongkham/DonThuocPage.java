@@ -17,7 +17,9 @@ import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -32,15 +34,34 @@ import util.MsgBox;
  */
 public class DonThuocPage extends javax.swing.JFrame {
 
+    private void initDoctorMap() {
+        String sql = "SELECT MaBS, TenBS FROM BacSi";
+        try {
+            ResultSet rs = Xjdbc.query(sql);
+            while (rs.next()) {
+                String maBS = rs.getString("MaBS").trim(); // Tránh khoảng trắng
+                String tenBS = rs.getString("TenBS").trim(); // Tránh khoảng trắng
+                doctorMap.put(maBS, tenBS);
+                System.out.println("Mã BS: " + maBS + ", Tên BS: " + tenBS); // In ra để kiểm tra
+            }
+            rs.getStatement().getConnection().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            MsgBox.alert(this, "Lỗi khi tải tên bác sĩ.");
+        }
+    }
+
     /**
      * Creates new form Doctor
      */
     public DonThuocPage() {
-
+        initDoctorMap();
         initComponents();
         init();
-
+        setupTableMouseListener();
     }
+
+    private Map<String, String> doctorMap = new HashMap<>();
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -78,7 +99,7 @@ public class DonThuocPage extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Mã Đơn Thuốc", "Mã Bác Sĩ", "Liều Dùng", ""
+                "Mã đơn thuốc", "Bác sĩ kê đơn", "Liều Dùng", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -249,11 +270,10 @@ public class DonThuocPage extends javax.swing.JFrame {
                     // Xóa các chi tiết đơn thuốc trước
 
                     Xjdbc.update(DELETE_DTCT, maDT);
-
                     // Sau đó xóa đơn thuốc chính
                     Xjdbc.update(DELETE_DT, maDT);
 
-                    this.loadAllDonThuoc(); 
+                    this.loadAllDonThuoc();
                     MsgBox.alert(this, "Xóa đơn thuốc thành công!");
                 } catch (Exception e) {
                     MsgBox.alert(this, "Xóa đơn thuốc thất bại. Vui lòng kiểm tra lại.");
@@ -292,31 +312,43 @@ public class DonThuocPage extends javax.swing.JFrame {
     void fillTable(List<DonThuoc> list) {
         DefaultTableModel model = (DefaultTableModel) tblDanhSach.getModel();
         model.setRowCount(0);
+
         try {
             for (DonThuoc th : list) {
+                // Lấy tên bác sĩ từ Map dựa trên mã bác sĩ
+                String maBSFromList = th.getMaBS().trim(); // Loại bỏ khoảng trắng nếu có
+                String tenBS = doctorMap.getOrDefault(maBSFromList, "Không rõ");
+                String maVaTenBS = th.getMaBS() + " - " + tenBS;
+
                 Object[] row = {
                     th.getMaDT(),
-                    th.getMaBS(),
+                    maVaTenBS, // Mã và tên bác sĩ
                     th.getLieudung(),
                     "Xóa"
                 };
                 model.addRow(row);
             }
-            tblDanhSach.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    int row = tblDanhSach.rowAtPoint(e.getPoint());
-                    int column = tblDanhSach.columnAtPoint(e.getPoint());
-                    if (column == 3) { // Nếu cột được nhấp là cột "Xóa"
-                        String maDT = (String) tblDanhSach.getValueAt(row, 0); // Lấy mã bệnh nhân
-                        delete(maDT); // Gọi hàm xóa
-                    }
-                }
-            });
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
             MsgBox.alert(this, "Lỗi truy vấn dữ liệu!");
         }
+    }
+
+    void setupTableMouseListener() {
+        tblDanhSach.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = tblDanhSach.rowAtPoint(e.getPoint());  // Lấy chỉ số dòng được nhấn
+                int col = tblDanhSach.columnAtPoint(e.getPoint());  // Lấy chỉ số cột được nhấn
+
+                // Kiểm tra nếu người dùng nhấn vào cột cuối cùng (cột "Xóa")
+                if (col == tblDanhSach.getColumnCount() - 1) {
+                    DefaultTableModel model = (DefaultTableModel) tblDanhSach.getModel();
+                    String maDT = (String) tblDanhSach.getValueAt(row, 0); // Lấy mã bệnh nhân
+                    delete(maDT);  // Xóa dòng tương ứng
+                }
+            }
+        });
     }
 
     public void loadAllDonThuoc() {

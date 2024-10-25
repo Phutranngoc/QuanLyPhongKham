@@ -73,7 +73,6 @@ public class DonThuocModal extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         txtMaDonThuoc = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        txtBacSi = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         txtLieuDung = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -125,23 +124,18 @@ public class DonThuocModal extends javax.swing.JDialog {
         jSeparator1.setBounds(3, 32, 890, 3);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel3.setText("Mã Bác Sĩ Kê");
+        jLabel3.setText("Bác sĩ kê đơn");
         jPanel3.add(jLabel3);
         jLabel3.setBounds(20, 120, 120, 30);
 
         txtMaDonThuoc.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jPanel3.add(txtMaDonThuoc);
-        txtMaDonThuoc.setBounds(160, 60, 414, 30);
+        txtMaDonThuoc.setBounds(160, 70, 414, 30);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel4.setText("Mã Đơn Thuốc");
+        jLabel4.setText("Mã đơn thuốc");
         jPanel3.add(jLabel4);
-        jLabel4.setBounds(20, 60, 130, 22);
-
-        txtBacSi.setEditable(false);
-        txtBacSi.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        jPanel3.add(txtBacSi);
-        txtBacSi.setBounds(160, 120, 130, 30);
+        jLabel4.setBounds(20, 70, 130, 22);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel6.setText("Liều dùng");
@@ -153,7 +147,7 @@ public class DonThuocModal extends javax.swing.JDialog {
         txtLieuDung.setBounds(160, 170, 410, 30);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel5.setText("Số Thuốc");
+        jLabel5.setText("Số thuốc");
         jPanel3.add(jLabel5);
         jLabel5.setBounds(20, 240, 130, 30);
 
@@ -204,7 +198,7 @@ public class DonThuocModal extends javax.swing.JDialog {
             }
         });
         jPanel3.add(cboBS);
-        cboBS.setBounds(310, 120, 160, 30);
+        cboBS.setBounds(160, 120, 410, 30);
 
         btnNew.setText("Làm mới");
         btnNew.addActionListener(new java.awt.event.ActionListener() {
@@ -304,7 +298,7 @@ public class DonThuocModal extends javax.swing.JDialog {
     }//GEN-LAST:event_btnThemThuocMouseClicked
 
     private void cboBSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboBSActionPerformed
-        txtBacSi.setText(String.valueOf(cboBS.getSelectedItem()));
+
     }//GEN-LAST:event_cboBSActionPerformed
 
     private void cboThuocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboThuocActionPerformed
@@ -384,7 +378,6 @@ public class DonThuocModal extends javax.swing.JDialog {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPanel panel;
     private javax.swing.JTable tblThuoc;
-    private javax.swing.JTextField txtBacSi;
     private javax.swing.JTextField txtLieuDung;
     private javax.swing.JTextField txtMaDonThuoc;
     private javax.swing.JTextField txtSoThuoc;
@@ -405,15 +398,16 @@ public class DonThuocModal extends javax.swing.JDialog {
         try {
             // Kiểm tra dữ liệu đầu vào
             String maDonThuoc = txtMaDonThuoc.getText();
-            String bacSi = txtBacSi.getText();
+            String selectedDoctor = cboBS.getSelectedItem().toString();
+            String maBS = selectedDoctor.split("-")[0]; // Lấy phần mã bác sĩ (MaBS)
             String lieuDung = txtLieuDung.getText();
 
             System.out.println("Mã Đơn Thuốc: " + maDonThuoc);
-            System.out.println("Bác Sĩ: " + bacSi);
+            System.out.println("Bác Sĩ: " + maBS);
             System.out.println("Liều Dùng: " + lieuDung);
 
             // Thêm đơn thuốc
-            Xjdbc.update(INSERT_DonThuoc, maDonThuoc, bacSi, lieuDung);
+            Xjdbc.update(INSERT_DonThuoc, maDonThuoc, maBS, lieuDung);
             System.out.println("Đơn thuốc đã được thêm!");
 
             int dem = tblThuoc.getRowCount();
@@ -444,8 +438,11 @@ public class DonThuocModal extends javax.swing.JDialog {
 
     public void update() {
         try {
+            String selectedDoctor = cboBS.getSelectedItem().toString();
+            String maBS = selectedDoctor.split("-")[0]; // Lấy phần mã bác sĩ (MaBS)
+
             // Cập nhật thông tin đơn thuốc
-            Xjdbc.update(UPDATE_SQL, txtBacSi.getText(), txtLieuDung.getText(), txtMaDonThuoc.getText());
+            Xjdbc.update(UPDATE_SQL, maBS, txtLieuDung.getText(), txtMaDonThuoc.getText());
 
             // Xóa tất cả chi tiết đơn thuốc hiện tại trước khi thêm mới
             Xjdbc.update(DELETE_DTCT, txtMaDonThuoc.getText());
@@ -488,18 +485,31 @@ public class DonThuocModal extends javax.swing.JDialog {
     }
 
     public void Clearform() {
-        txtBacSi.setText("");
+
         txtLieuDung.setText("");
         txtMaDonThuoc.setText("");
         txtSoThuoc.setText("");
     }
 
     void setFrom(DonThuoc dt) {
-        txtBacSi.setText(dt.getMaBS());
+
         txtLieuDung.setText(dt.getLieudung());
         txtMaDonThuoc.setText(dt.getMaDT());
 //        loadData(dt.getMaDT());
         LoadDataThuoc(dt);
+
+        // Đặt giá trị cho cboBS dựa trên mã bác sĩ từ đối tượng DonThuoc
+        String maBS = dt.getMaBS(); // Giả sử bạn có phương thức getMaBS() trong DonThuoc để lấy mã bác sĩ
+        for (int i = 0; i < cboBS.getItemCount(); i++) {
+            String item = cboBS.getItemAt(i).toString();
+            String itemMaBS = item.split(" - ")[0]; // Lấy phần mã từ ComboBox (phần trước dấu '-')
+
+            if (itemMaBS.equals(maBS)) {
+                cboBS.setSelectedIndex(i); // Đặt mục đã chọn trong ComboBox
+                break;
+            }
+        }
+
         int lieudung = tblThuoc.getRowCount();
         txtSoThuoc.setText(String.valueOf(lieudung));
 
@@ -656,14 +666,14 @@ public class DonThuocModal extends javax.swing.JDialog {
     }
 
     boolean checkform() {
-        if (txtBacSi.getText().equals("")) {
-            MsgBox.alert(this, "KHông được để trống mã bác sĩ kê thuốc!");
+        if (cboBS.getSelectedItem() == null || cboBS.getSelectedItem().toString().equals("")) {
+            MsgBox.alert(this, "Không được để trống mã bác sĩ kê thuốc!");
             return false;
         } else if (txtLieuDung.getText().equals("")) {
-            MsgBox.alert(this, "KHông được để trống liều dùng!");
+            MsgBox.alert(this, "Không được để trống liều dùng!");
             return false;
         } else if (txtMaDonThuoc.getText().equals("")) {
-            MsgBox.alert(this, "KHông được để trống mã đơn thuốc!");
+            MsgBox.alert(this, "Không được để trống mã đơn thuốc!");
             return false;
         } else if (tblThuoc.getRowCount() == 0) {
             MsgBox.alert(this, "Vui lòng chọn thuốc!");
@@ -688,12 +698,14 @@ public class DonThuocModal extends javax.swing.JDialog {
     }
 
     public List<String> selectIDBS() {
-        String sql = "select MaBS from BacSi";
+        String sql = "SELECT MaBS, TenBS FROM BacSi";
         List<String> list = new ArrayList<>();
         try {
             ResultSet rs = Xjdbc.query(sql);
             while (rs.next()) {
-                list.add(rs.getString("MaBS"));
+                String maBS = rs.getString("MaBS");
+                String tenBS = rs.getString("TenBS");
+                list.add(maBS + " - " + tenBS); // Định dạng "MaBS - TenBS"
             }
             rs.getStatement().getConnection().close();
             return list;
