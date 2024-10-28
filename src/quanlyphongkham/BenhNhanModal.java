@@ -151,6 +151,11 @@ public class BenhNhanModal extends javax.swing.JDialog {
         txtTuoi.setBounds(280, 140, 44, 26);
 
         txtNgaySinh.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        txtNgaySinh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNgaySinhActionPerformed(evt);
+            }
+        });
         jPanel2.add(txtNgaySinh);
         txtNgaySinh.setBounds(140, 140, 121, 26);
 
@@ -276,6 +281,10 @@ public class BenhNhanModal extends javax.swing.JDialog {
             txtMaBN.setEnabled(true);
         }
     }//GEN-LAST:event_btnNewActionPerformed
+
+    private void txtNgaySinhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgaySinhActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNgaySinhActionPerformed
 
     /**
      * @param args the command line arguments

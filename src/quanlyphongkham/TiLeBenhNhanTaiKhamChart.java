@@ -17,6 +17,10 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.util.Rotation;
 import util.Xjdbc;
 
+/**
+ *
+ * @author ADMIN
+ */
 public class TiLeBenhNhanTaiKhamChart extends javax.swing.JPanel {
 
     private String title = "Tỉ lệ Bệnh Nhân Quay Lại Khám Bệnh";

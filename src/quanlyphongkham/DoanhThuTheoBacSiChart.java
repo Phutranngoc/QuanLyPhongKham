@@ -17,6 +17,10 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.util.Rotation;
 import util.Xjdbc;
 
+/**
+ *
+ * @author ADMIN
+ */
 public class DoanhThuTheoBacSiChart extends javax.swing.JPanel {
 
     private String title = "Doanh Thu (Năm) Theo Bác Sĩ";

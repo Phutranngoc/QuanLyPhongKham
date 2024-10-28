@@ -9,8 +9,13 @@ import DAO.ThuocDAO;
 import Entity.Thuoc;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import util.Auth;
 import util.MsgBox;
@@ -222,7 +227,11 @@ public class QuanLyThuoc extends javax.swing.JDialog {
         // TODO add your handling code here:
         if (checkform()) {
             if (checkInsert()) {
-                this.insert();
+                try {
+                    this.insert();
+                } catch (ParseException ex) {
+                    Logger.getLogger(QuanLyThuoc.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }//GEN-LAST:event_btnAddActionPerformed
@@ -230,8 +239,12 @@ public class QuanLyThuoc extends javax.swing.JDialog {
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
         if (checkform()) {
-            MsgBox.confirm(this,"Vui lòng không thay đổi mã thuốc khi cập nhật");
-            this.update();
+            MsgBox.confirm(this, "Vui lòng không thay đổi mã thuốc khi cập nhật");
+            try {
+                this.update();
+            } catch (ParseException ex) {
+                Logger.getLogger(QuanLyThuoc.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
@@ -341,21 +354,48 @@ public class QuanLyThuoc extends javax.swing.JDialog {
         }
     }
 
-    Thuoc getform() {
+    Thuoc getform() throws ParseException {
         Thuoc th = new Thuoc();
+        String formattedDate = "";
+        try {
+            String inputDate = txtHSD.getText();
+            // Define the date format you expect to receive (dd/MM/yyyy)
+            SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = inputFormat.parse(inputDate);  // Parse the input date
+
+            // Define the date format the database expects (yyyy-MM-dd)
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+            formattedDate = outputFormat.format(date);  // Format the date
+        } catch (Exception e) {
+            formattedDate = "";
+        }
         th.setMaThuoc(txtMaThuoc.getText());
         th.setTenthuoc(txttenThuoc.getText());
         th.setDVT(txtDonVi.getText());
-        th.setHSD(txtHSD.getText());
+        th.setHSD(formattedDate);
         th.setGiaTien(txtGiaThuoc.getText());
         return th;
     }
 
     void setForm(Thuoc th) {
+        String dateFormatHanSuDung = th.getHSD();
+        if (dateFormatHanSuDung != null) {
+            try {
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+                Date date = inputFormat.parse(dateFormatHanSuDung);
+                String formattedDate = outputFormat.format(date);
+                txtHSD.setText(formattedDate);
+            } catch (ParseException e) {
+                txtHSD.setText(""); // Handle parsing error
+            }
+        } else {
+            txtHSD.setText(""); // Handle null case
+        }
         txtMaThuoc.setText(th.getMaThuoc());
         txttenThuoc.setText(th.getTenthuoc());
         txtDonVi.setText(th.getDVT());
-        txtHSD.setText(th.getHSD());
+        //txtHSD.setText(th.getHSD());
         txtGiaThuoc.setText(th.getGiaTien());
     }
 
@@ -365,7 +405,7 @@ public class QuanLyThuoc extends javax.swing.JDialog {
         this.setForm(medic);
     }
 
-    void insert() {
+    void insert() throws ParseException {
         Thuoc medic = this.getform();
         try {
             dao.insert(medic);
@@ -379,7 +419,7 @@ public class QuanLyThuoc extends javax.swing.JDialog {
         }
     }
 
-    void update() {
+    void update() throws ParseException {
         Thuoc medic = this.getform();
         try {
             dao.update(medic); // cập nhật
@@ -421,7 +461,7 @@ public class QuanLyThuoc extends javax.swing.JDialog {
     }
 
     boolean checkform() {
-        String regex = "^\\d{4}-\\d{2}-\\d{2}$";
+        String regex = "^\\d{2}/\\d{2}/\\d{4}$";
         if (txtMaThuoc.getText().equals("")) {
             MsgBox.alert(this, "Bạn chưa nhập mã thuốc");
             return false;
@@ -437,8 +477,12 @@ public class QuanLyThuoc extends javax.swing.JDialog {
         } else if (!txtHSD.getText().matches(regex)) {
             MsgBox.alert(this, "Bạn nhập sai định dạng ngày,hãy kiểm tra lại(yyy-mm-dd)!");
             return false;
-        } else if(txtGiaThuoc.getText().equals("")){
+        } else if (txtGiaThuoc.getText().equals("")) {
             MsgBox.alert(this, "Bạn chưa nhập giá thuốc này!");
+            return false;
+        } else if (Double.parseDouble(txtGiaThuoc.getText()) < 0) {
+            MsgBox.alert(this, "Giá Thuốc không hợp lệ!");
+            return false;
         }
         return true;
     }

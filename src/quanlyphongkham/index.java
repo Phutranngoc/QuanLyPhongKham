@@ -436,7 +436,7 @@ public class index extends javax.swing.JFrame {
     private void mniBNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniBNActionPerformed
         // TODO add your handling code here:
         if (Auth.isLogin()) {
-            new QuanLyBenhNhan(this, true).setVisible(true);
+            new BenhNhanPage().setVisible(true);
         } else {
             MsgBox.alert(this, "Vui lòng đăng nhập!");
         }
@@ -778,7 +778,7 @@ public class index extends javax.swing.JFrame {
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         // TODO add your handling code here:
         if (Auth.isLogin()) {
-            new QuanLyBacSi(this, true).setVisible(true);
+            new BacSiPage().setVisible(true);
         } else {
             MsgBox.alert(this, "Vui lòng đăng nhập!");
         }
@@ -825,7 +825,7 @@ public class index extends javax.swing.JFrame {
     private void mniDTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniDTActionPerformed
         // TODO add your handling code here:
         if (Auth.isLogin()) {
-            new QuanLyDonThuoc(this, true).setVisible(true);
+            new DonThuocPage().setVisible(true);
         } else {
             MsgBox.alert(this, "Vui lòng đăng nhập!");
         }

@@ -15,7 +15,7 @@ import javax.swing.text.TabSet;
 
 /**
  *
- * @author HA NAM
+ * @author ADMIN
  */
 public class ThongKe extends javax.swing.JDialog {
 

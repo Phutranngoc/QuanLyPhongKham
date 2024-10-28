@@ -17,6 +17,10 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.util.Rotation;
 import util.Xjdbc;
 
+/**
+ *
+ * @author ADMIN
+ */
 public class TiLeSoHuuBaoHiemChart extends javax.swing.JPanel {
 
     private String title = "Tỉ Lệ Bệnh Nhân Sở Hữu Bảo Hiểm Y Tế";
